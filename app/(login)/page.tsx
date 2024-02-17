@@ -36,7 +36,6 @@ const LoginScreen: React.FC = () => {
               icon={HiOutlineLockOpen}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
           </div>
           <div className="mb-4 flex items-center">

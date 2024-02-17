@@ -11,7 +11,7 @@ import StaffChart from './Staffchart';
 import Studentchart from './Studentchart';
 import SuperAdminHeader from '../../components/super_admin_header';
 
-export const cardInfo = [
+const cardInfo = [
   { title: 'Total Branches', icon: <LayoutPanelTop />, value: '6' },
   { title: 'Total Principals', icon: <UserRoundCog />, value: '6' },
   { title: 'Total Staff', icon: <UsersRound />, value: '400' },
