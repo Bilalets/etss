@@ -8,7 +8,7 @@ import TopTen from './TopTen';
 import StaffAttendance from './StaffAttendance';
 import Annual from './Annual';
 import SuperAdminHeader from '../../components/super_admin_header';
-import RootLayout from '../../layout';
+
 const cardInfo = [
   { title: 'Excellent Branch', icon: <ThumbsUp />, name: 'Branch A' },
   { title: 'Poor Branch', icon: <ThumbsDown />, name: 'Branch D' },
