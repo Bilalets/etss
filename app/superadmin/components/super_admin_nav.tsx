@@ -2,13 +2,13 @@
 import {
   BarChart3,
   Component,
-  FolderGit2,
-  GraduationCap,
+  CircleUser,
   Info,
   LayoutDashboard,
   LogOutIcon,
-  Network,
+  BookOpenCheck,
   Users,
+  ScanEye,
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -33,7 +33,7 @@ const SuperAdminNavbar = () => {
           <SubMenu
             icon={<LayoutDashboard />}
             label="Dashboard"
-            defaultOpen={true}
+            defaultOpen={false}
           >
             <hr />
             <MenuItem
@@ -55,26 +55,40 @@ const SuperAdminNavbar = () => {
           <hr />
           <MenuItem
             icon={<Users />}
-            component={<Link href="/superadmin/principals" />}
+            component={<Link href="/superadmin/experts" />}
           >
-            Principals
+            Experts
           </MenuItem>
           <hr />
           <MenuItem
             icon={<Component />}
-            component={<Link href="/superadmin/branches" />}
+            component={<Link href="/superadmin/subjects" />}
           >
-            Branches
+            Subjects
           </MenuItem>
           <hr />
-          <SubMenu icon={<FolderGit2 />} label="Reports">
-            <hr />
-            <MenuItem icon={<Network />}>Branches</MenuItem>
-            <hr />
-            <MenuItem icon={<GraduationCap />}>Students</MenuItem>
-            <hr />
-          </SubMenu>
+          <MenuItem
+            icon={<BookOpenCheck />}
+            component={<Link href="/superadmin/subjects" />}
+          >
+            Assessments
+          </MenuItem>
           <hr />
+          <MenuItem
+            icon={<ScanEye />}
+            component={<Link href="/superadmin/assessments" />}
+          >
+            Categories
+          </MenuItem>
+          <hr />
+          <MenuItem
+            icon={<Users />}
+            component={<Link href="/superadmin/categories" />}
+          >
+            Applicants
+          </MenuItem>
+          <hr />
+
           <MenuItem icon={<LogOutIcon />} component={<Link href="/" />}>
             Logout
           </MenuItem>
