@@ -1,14 +1,32 @@
 'use client';
 import React, { useState } from 'react';
 import GeneralHeader from '../components/general_header';
-import { Button, Card, Label, Modal, TextInput } from 'flowbite-react';
+import { Button, Card, Modal, TableHead, TextInput } from 'flowbite-react';
 import { PlusCircle, Save, SquarePen, Trash2, XCircle } from 'lucide-react';
-
+import { Table } from 'flowbite-react';
 const Experts = () => {
   const data = [
-    { id: 1, name: 'Naeem', subject: 'Law' },
-    { id: 2, name: 'Iqbal Safi', subject: 'Bio' },
-    { id: 3, name: 'Ismail', subject: 'Programming' },
+    {
+      id: 1,
+      name: 'Naeem',
+      subject: 'Law',
+      username: 'naaem@sat.com',
+      password: '123',
+    },
+    {
+      id: 2,
+      name: 'Iqbal Safi',
+      subject: 'Bio',
+      username: 'iqbal@sat.com',
+      password: '123',
+    },
+    {
+      id: 3,
+      name: 'Ismail',
+      subject: 'Programming',
+      username: 'ismail@sat.com',
+      password: '123',
+    },
   ];
   const subjects = [
     { id: 1, subject: 'law' },
@@ -41,6 +59,8 @@ const Experts = () => {
                 </option>
               ))}
             </select>
+            <TextInput id="username" placeholder="Username" required />
+            <TextInput id="password" placeholder="Password" required />
           </div>
           <div className="flex justify-between w-full mt-5">
             <div className="flex-wrap gap-2">
@@ -77,13 +97,27 @@ const Experts = () => {
           <Card key={item.id} className="m-5 w-full lg:max-w-[600px]">
             <div className="flex justify-between">
               <p>{index + 1}</p>
-              <p>{item.name}</p>
-              <p className=" text-gray-500"> ({item.subject})</p>
+
               <div className="flex gap-5">
                 <SquarePen className=" text-2xl text-yellow-400 cursor-pointer" />
                 <Trash2 className=" text-2xl text-red-500 cursor-pointer" />
               </div>
             </div>
+            <hr />
+            <Table>
+              <Table.Head>
+                <Table.HeadCell>Expert Name</Table.HeadCell>
+                <Table.HeadCell>Username</Table.HeadCell>
+                <Table.HeadCell>Password</Table.HeadCell>
+              </Table.Head>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell>{item.name}</Table.Cell>
+                  <Table.Cell>{item.username}</Table.Cell>
+                  <Table.Cell>{item.password}</Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            </Table>
           </Card>
         ))}
       </div>

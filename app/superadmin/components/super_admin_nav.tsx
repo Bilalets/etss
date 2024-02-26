@@ -54,19 +54,20 @@ const SuperAdminNavbar = () => {
 
           <hr />
           <MenuItem
-            icon={<Users />}
-            component={<Link href="/superadmin/experts" />}
-          >
-            Experts
-          </MenuItem>
-          <hr />
-          <MenuItem
             icon={<Component />}
             component={<Link href="/superadmin/subjects" />}
           >
             Subjects
           </MenuItem>
           <hr />
+          <MenuItem
+            icon={<Users />}
+            component={<Link href="/superadmin/experts" />}
+          >
+            Experts
+          </MenuItem>
+          <hr />
+
           <MenuItem
             icon={<BookOpenCheck />}
             component={<Link href="/superadmin/subjects" />}
