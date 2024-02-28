@@ -1,67 +1,110 @@
 'use client';
-import React, { useState } from 'react';
-import { Label, TextInput } from 'flowbite-react';
+import React, { useRef, useState } from 'react';
+import { Button, Label, TextInput } from 'flowbite-react';
 import { HiOutlineUserCircle, HiOutlineLockOpen } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { signIn } from 'next-auth/react';
+import { toast } from 'react-hot-toast';
+import { AiOutlineLoading } from 'react-icons/ai';
+interface FormValues {
+  email: string;
+  password: string;
+}
+
 const LoginScreen: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
-  const navigation = useRouter();
-  const handleLogin = () => {
-    navigation.replace('/superadmin/dashboard/statistics');
+  const rememberMeRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    setLoading(true);
+    console.log(data);
+    signIn('credentials', {
+      ...data,
+      redirect: false,
+    })
+      .then((callback) => {
+        if (callback?.error) {
+          toast.error('username or password miss match ');
+        }
+        if (callback?.ok && !callback.error) {
+          router.push('/superadmin/dashboard/statistics');
+        }
+      })
+      .finally(() => setLoading(true));
+    //
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-lg max-w-sm w-full">
-        <h2 className="text-2xl font-semibold mb-4">Login</h2>
-        <form onSubmit={(e) => e.preventDefault()}>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="bg-white p-8 rounded shadow-lg max-w-sm w-full">
+          <h2 className="text-2xl font-semibold mb-4">Login</h2>
           <div className="mb-4">
-            <Label htmlFor="username" value="Username" />
-
+            <Label htmlFor="email" value="Email" />
             <TextInput
+              {...register('email', { required: 'email is required' })}
               type="email"
               id="username"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              shadow
               icon={HiOutlineUserCircle}
             />
+            {errors.email && (
+              <span className="text-red-500">{errors.email.message}</span>
+            )}{' '}
           </div>
           <div className="mb-4">
             <Label htmlFor="password" value="Password" />
             <TextInput
+              {...register('password', { required: 'Password is required' })}
               type="password"
               id="password"
               icon={HiOutlineLockOpen}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
             />
+            {errors.password && (
+              <span className="text-red-500">{errors.password.message}</span>
+            )}{' '}
           </div>
           <div className="mb-4 flex items-center">
             <input
               type="checkbox"
               id="rememberMe"
+              ref={rememberMeRef}
               className="mr-2"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
             />
             <label htmlFor="rememberMe" className="text-gray-700">
               Remember Me
             </label>
           </div>
           <div className="flex justify-end">
-            <button
-              type="submit"
-              className="w-full px-6 py-2 bg-black text-white rounded hover:bg-gray-800 focus:outline-none"
-              onClick={handleLogin}
-            >
-              Login
-            </button>
+            {loading ? (
+              <Button
+                className="w-full  bg-black text-white rounded hover:bg-gray-800 focus:outline-none"
+                isProcessing
+                processingSpinner={
+                  <AiOutlineLoading className="h-6 w-6 animate-spin" />
+                }
+              >
+                Please wait.....
+              </Button>
+            ) : (
+              <button
+                type="submit"
+                className="w-full px-6 py-2 bg-black text-white rounded hover:bg-gray-800 focus:outline-none"
+              >
+                Login
+              </button>
+            )}
           </div>
-        </form>
+        </div>
       </div>
-    </div>
+    </form>
   );
 };
 
