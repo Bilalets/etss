@@ -32,12 +32,14 @@ const LoginScreen: React.FC = () => {
       .then((callback) => {
         if (callback?.error) {
           toast.error('username or password miss match ');
+          setLoading(false);
         }
         if (callback?.ok && !callback.error) {
+          toast.success('Logged in success ');
           router.push('/superadmin/dashboard/statistics');
         }
       })
-      .finally(() => setLoading(true));
+      .finally(() => setLoading(false));
     //
   };
 
@@ -49,14 +51,16 @@ const LoginScreen: React.FC = () => {
           <div className="mb-4">
             <Label htmlFor="email" value="Email" />
             <TextInput
-              {...register('email', { required: 'email is required' })}
+              {...register('email', { required: 'Email is required' })}
               type="email"
-              id="username"
+              id="email"
               shadow
               icon={HiOutlineUserCircle}
             />
             {errors.email && (
-              <span className="text-red-500">{errors.email.message}</span>
+              <span className=" text-sm text-red-500">
+                {errors.email.message}
+              </span>
             )}{' '}
           </div>
           <div className="mb-4">
@@ -68,7 +72,9 @@ const LoginScreen: React.FC = () => {
               icon={HiOutlineLockOpen}
             />
             {errors.password && (
-              <span className="text-red-500">{errors.password.message}</span>
+              <span className="text-sm text-red-500">
+                {errors.password.message}
+              </span>
             )}{' '}
           </div>
           <div className="mb-4 flex items-center">
