@@ -7,13 +7,13 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import { AiOutlineLoading } from 'react-icons/ai';
+import Link from 'next/link';
 interface FormValues {
   email: string;
   password: string;
 }
 
 const LoginScreen: React.FC = () => {
-  const rememberMeRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const {
@@ -24,7 +24,7 @@ const LoginScreen: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     setLoading(true);
-    console.log(data);
+
     signIn('credentials', {
       ...data,
       redirect: false,
@@ -36,7 +36,7 @@ const LoginScreen: React.FC = () => {
         }
         if (callback?.ok && !callback.error) {
           toast.success('Logged in success ');
-          router.push('/superadmin/dashboard/statistics');
+          router.replace('/superadmin/dashboard/statistics');
         }
       })
       .finally(() => setLoading(false));
@@ -46,7 +46,7 @@ const LoginScreen: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="bg-white p-8 rounded shadow-lg max-w-sm w-full">
+        <div className="bg-white p-8 rounded shadow-lg max-w-md w-full">
           <h2 className="text-2xl font-semibold mb-4">Login</h2>
           <div className="mb-4">
             <Label htmlFor="email" value="Email" />
@@ -77,17 +77,7 @@ const LoginScreen: React.FC = () => {
               </span>
             )}{' '}
           </div>
-          <div className="mb-4 flex items-center">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              ref={rememberMeRef}
-              className="mr-2"
-            />
-            <label htmlFor="rememberMe" className="text-gray-700">
-              Remember Me
-            </label>
-          </div>
+
           <div className="flex justify-end">
             {loading ? (
               <Button
@@ -107,6 +97,15 @@ const LoginScreen: React.FC = () => {
                 Login
               </button>
             )}
+          </div>
+          <div className="flex justify-between mt-10">
+            <p className="text-sm cursor-pointer">Forgot password?</p>
+            <p className="text-sm">
+              Not a member yet?{' '}
+              <span className="font-bold text-sm cursor-pointer text-sky-400">
+                <Link href={'/signup'}>Sign up</Link>
+              </span>
+            </p>
           </div>
         </div>
       </div>
