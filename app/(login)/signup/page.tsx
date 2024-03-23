@@ -6,6 +6,7 @@ import {
   HiOutlineMail,
   HiOutlinePhone,
   HiOutlineLockClosed,
+  HiOutlineUserCircle,
   HiOutlineEye,
   HiOutlineEyeOff,
 } from 'react-icons/hi';
@@ -65,14 +66,14 @@ const SignUp = () => {
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
           <div className="bg-white p-8 rounded shadow-lg max-w-md w-full">
             <h2 className="text-2xl font-semibold mb-4">Sign Up</h2>
-            <div className="mt-10">
+            <div className="mt-4">
               <Label htmlFor="full_name" value="Full Name" />
               <TextInput
                 {...register('fullName', { required: 'Full name is required' })}
                 type="Name"
                 id="fullName"
                 shadow
-                icon={HiOutlineUser}
+                icon={HiOutlineUserCircle}
                 placeholder="Full Name"
               />
               {errors.fullName && (
@@ -90,7 +91,7 @@ const SignUp = () => {
                 type="fatherName"
                 id="fatherName"
                 shadow
-                icon={HiUser}
+                icon={HiOutlineUserCircle}
                 placeholder="Father Name"
               />
               {errors.fullName && (
