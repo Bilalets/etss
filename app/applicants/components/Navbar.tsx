@@ -4,9 +4,10 @@ import { clsx } from 'clsx';
 import { LayoutDashboard, Home, History, NotebookText } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { BASE_URL } from '@/config/Constants';
 
 const Navbar = () => {
-  const baseurl = 'sat-psi.vercel.app/';
+  const baseurl = BASE_URL;
   const pathname = usePathname();
 
   let fullPath = baseurl + pathname;

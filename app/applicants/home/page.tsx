@@ -3,7 +3,7 @@ import { Button, Card } from 'flowbite-react';
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { BASE_URL } from '../constants/page';
+import { BASE_URL } from '@/config/Constants';
 
 const Home = () => {
   const subjects = [
