@@ -1,41 +1,60 @@
-'use client';
+'use client'
 import React from 'react';
 import { clsx } from 'clsx';
-import { LayoutDashboard, Home, History, NotebookText } from 'lucide-react';
+import { LayoutDashboard, Home, History, NotebookText, CircleUserRound } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { BASE_URL } from '@/config/Constants';
+import { signOut, useSession } from 'next-auth/react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
-const Navbar = () => {
+
+
+const Navbar =  () => {
+  
+
   const baseurl = BASE_URL;
   const pathname = usePathname();
-
+  const {data:session}=useSession()
+  
   let fullPath = baseurl + pathname;
-  console.log(fullPath);
+  
+
+ 
+  const handleSignOut = async () => {
+    const data = await signOut({ redirect: true, callbackUrl: '/' })
+    
+  
+
+  }
+
   const routes = [
     {
       icon: Home,
-      href: `${baseurl}/applicants/home`,
+      href: `/applicants/home`,
       label: 'Home',
-      active: fullPath === `${baseurl}/applicants/home` ? true : false,
+      active: fullPath === `/applicants/home` ? true : false,
     },
     {
       icon: LayoutDashboard,
-      href: `${baseurl}/applicants/dashboard`,
+      href: `/applicants/dashboard`,
       label: 'Dashboard',
-      active: fullPath === `${baseurl}/applicants/dashboard` ? true : false,
+      active: fullPath === `/applicants/dashboard` ? true : false,
     },
     {
       icon: History,
-      href: `${baseurl}/history`,
+      href: `/applicants/history`,
       label: 'History',
-      active: fullPath === `${baseurl}/applicants/history` ? true : false,
+      active: fullPath === `/applicants/history` ? true : false,
     },
+  
+ 
     {
-      icon: NotebookText,
-      href: `${baseurl}/applicants/assessments`,
-      label: 'Assessments',
-      active: fullPath === `${baseurl}/applicants/assessments` ? true : false,
+      icon: CircleUserRound,
+      href: `/applicants/profile`,
+      label: 'Profile',
+      active: fullPath === `/applicants/profile` ? true : false,
     },
   ];
   return (
@@ -44,7 +63,7 @@ const Navbar = () => {
         <div>
           <p className="text-2xl font-semibold">S A T</p>
         </div>
-        <div className="flex ml-4 space-x-4 lg:space-x-6">
+        <div className="flex ml-4 space-x-4 lg:space-x-6 items-center">
           {routes.map((route) => (
             <Link
               key={route.label}
@@ -69,7 +88,12 @@ const Navbar = () => {
               </div>
             </Link>
           ))}
+          <div>
+          <button onClick={handleSignOut} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Logout</button>
+           </div>
         </div>
+       
+
       </div>
     </nav>
   );

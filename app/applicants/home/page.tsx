@@ -1,67 +1,319 @@
-'use client';
-import { Button, Card } from 'flowbite-react';
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { BASE_URL } from '@/config/Constants';
+"use client";
+import { Button, Card } from "flowbite-react";
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { BASE_URL } from "@/config/Constants";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Home = () => {
+  const [activeCardId, setActiveCardId] = useState<number | null>(null);
+  const [activeOptionId, setActiveOptionId] = useState<number | null>(null);
+  const [activeSubOptionId, setActiveSubOptionId] = useState<number | null>(null);
   const subjects = [
     {
       id: 1,
-      subject: 'English',
-      image: '/images/eng.png',
-      status: 'Available',
+      subject: "CSS",
+      image: "/images/maths.png",
+      status: "Available",
+      option:["MPT"]
     },
     {
       id: 2,
-      subject: 'Biology',
-      image: '/images/bio.png',
-      status: 'Available',
+      subject: "IELTS",
+      image: "/images/ielts.png",
+      status: "Available",
+      option:["Writing","Listening","Speaking","Reading"]
     },
     {
       id: 3,
-      subject: 'Chemistry',
-      image: '/images/chemistry.png',
-      status: 'Available',
+      subject: "General Test",
+      image: "/images/general.png",
+      status: "Available",
+      option:["Quantitative reasoning"," Verbal reasoning", " Analytical reasoning"]
     },
     {
       id: 4,
-      subject: 'Maths',
-      image: '/images/maths.png',
-      status: 'Available',
+      subject: "FIA",
+      image: "/images/maths.png",
+      status: "Available",
+      option:["LDC","UDC","Assistant Director","Sub Inspector"]
     },
     {
       id: 5,
-      subject: 'IELTS',
-      image: '/images/ielts.png',
-      status: 'Available',
+      subject: "ISSB",
+      image: "/images/ielts.png",
+      status: "Available",
+      option:["Verbal","Non-Verbal","Academic"]
     },
     {
       id: 6,
-      subject: 'General Test',
-      image: '/images/general.png',
-      status: 'Available',
+      subject: "PMS",
+      image: "/images/general.png",
+      status: "Available",
+      option:["Complusory","Optional"]
     },
   ];
 
+  const subjects1 = [
+    {
+      id: 1,
+      subject: "Medical",
+      image: "/images/maths.png",
+      status: "Available",
+    },
+    {
+      id: 2,
+      subject: "Engineering",
+      image: "/images/ielts.png",
+      status: "Available",
+    },
+    {
+      id: 3,
+      subject: "PHD",
+      image: "/images/general.png",
+      status: "Available",
+    },
+    {
+      id: 4,
+      subject: "Master",
+      image: "/images/maths.png",
+      status: "Available",
+    },
+    {
+      id: 5,
+      subject: "HSSC",
+      image: "/images/ielts.png",
+      status: "Available",
+    },
+    {
+      id: 6,
+      subject: "SSC",
+      image: "/images/general.png",
+      status: "Available",
+    },
+  ];
+
+  const subjects2 = [
+    {
+      id: 1,
+      subject: "English",
+      image: "/images/maths.png",
+      status: "Available",
+    },
+    {
+      id: 2,
+      subject: "Maths",
+      image: "/images/ielts.png",
+      status: "Available",
+    },
+    {
+      id: 3,
+      subject: "Biology",
+      image: "/images/general.png",
+      status: "Available",
+    },
+  ];
+  const handleCardClick = (id: number) => {
+    setActiveCardId(activeCardId === id ? null : id);
+    setActiveOptionId(null);
+    setActiveSubOptionId(null);
+};
+
+const handleOptionClick = (optionId: number) => {
+    setActiveOptionId(activeOptionId === optionId ? null : optionId);
+    setActiveSubOptionId(null);
+};
+
+const handleSubOptionClick = (subOptionId: number) => {
+    setActiveSubOptionId(activeSubOptionId === subOptionId ? null : subOptionId);
+};
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4  p-10 cursor-pointer">
-        {subjects.map(({ id, subject, image, status }) => (
-          <Card key={id}>
-            <Link href={`${BASE_URL}/applicants/assessment/${id}`}>
-              <div className="flex w-full gap-x-[15%]">
-                <Image src={image} width={70} height={70} alt={subject} />
-                <p className="text-2xl text-gray-700">{subject}</p>
-              </div>
-              <div className="flex justify-end">
-                <p className="text-lg text-gray-400 ">{status}</p>
-              </div>
-            </Link>
-          </Card>
+       <div className="ml-10 mt-10">
+                <h1 className="text-xl">Self Assessment Test-SAT</h1>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg-grid-cols-3 gap-4 p-10">
+                {subjects.map(({ id, subject, image, status,option=[] }) => (
+                    <Card key={id}>
+                        <div
+                            onClick={() => handleCardClick(id)}
+                            className="flex w-full gap-x-[15%] cursor-pointer "
+                        >
+                            <Image src={image} width={70} height={70} alt={subject} />
+                            <p className="text-2xl text-gray-700">{subject}</p>
+                        </div>
+                        <div className="flex justify-end">
+                            <p className="text-lg text-gray-400">{status}</p>
+                        </div>
+                        {/* First level dropdown */}
+                        {activeCardId === id && (
+                            <div className="mt-2 ">
+                                <ul className="bg-white shadow-md rounded p-2">
+                                {option.map((opt, index) => (
+            <li
+                key={index} // Ensure each item has a unique key
+                className="p-2 hover:bg-gray-100"
+                onClick={() => handleOptionClick(id)} // Pass the option index if needed
+            >
+                {opt}
+            </li>
         ))}
-      </div>
+                                    {/* Add more options as needed */}
+                                </ul>
+                            </div>
+                        )}
+
+                        {/* Second level dropdown */}
+                        {activeCardId === id && activeOptionId === id && (
+                            <div className="mt-2">
+                               <Link href={`/applicants/assessment/${id}`}>
+                               <ul className="bg-white shadow-md rounded p-2">
+                                 
+                                 <li className="p-2 hover:bg-gray-100" onClick={() => handleSubOptionClick(id)}>
+                                     Sub-Option 1
+                                 </li>
+                                 <li className="p-2 hover:bg-gray-100" onClick={() => handleSubOptionClick(id)}>
+                                 Sub-Option 2
+                                 </li>
+                                 
+                                 {/* Add more sub-options as needed */}
+                             </ul>
+                               </Link>
+                           
+                            </div>
+                        )}
+
+                        {/* Additional nested dropdowns can be handled similarly */}
+                    </Card>
+                ))}
+            </div>
+
+
+            <div className="ml-10 mt-10">
+                <h1 className="text-xl">Scholistic Assessment Test-SAT</h1>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg-grid-cols-3 gap-4 p-10">
+                {subjects1.map(({ id, subject, image, status }) => (
+                    <Card key={id}>
+                        <div
+                            onClick={() => handleCardClick(id)}
+                            className="flex w-full gap-x-[15%] cursor-pointer"
+                        >
+                            <Image src={image} width={70} height={70} alt={subject} />
+                            <p className="text-2xl text-gray-700">{subject}</p>
+                        </div>
+                        <div className="flex justify-end">
+                            <p className="text-lg text-gray-400">{status}</p>
+                        </div>
+                        {/* First level dropdown */}
+                        {activeCardId === id && (
+                            <div className="mt-2">
+                                <ul className="bg-white shadow-md rounded p-2">
+                                    <li className="p-2 hover:bg-gray-100" onClick={() => handleOptionClick(id)}>
+                                        Option 1
+                                    </li>
+                                    <li className="p-2 hover:bg-gray-100" onClick={() => handleOptionClick(id)}>
+                                        Option 2
+                                    </li>
+                                    <li className="p-2 hover:bg-gray-100" onClick={() => handleOptionClick(id)}>
+                                        Option 3
+                                    </li>
+                                    {/* Add more options as needed */}
+                                </ul>
+                            </div>
+                        )}
+
+                        {/* Second level dropdown */}
+                        {activeCardId === id && activeOptionId === id && (
+                            <div className="mt-2">
+                               <Link href={`/applicants/assessment/${id}`}>
+                               <ul className="bg-white shadow-md rounded p-2">
+                                 
+                                 <li className="p-2 hover:bg-gray-100" onClick={() => handleSubOptionClick(id)}>
+                                     Sub-Option 1
+                                 </li>
+                                 <li className="p-2 hover:bg-gray-100" onClick={() => handleSubOptionClick(id)}>
+                                 Sub-Option 2
+                                 </li>
+                                 
+                                 {/* Add more sub-options as needed */}
+                             </ul>
+                               </Link>
+                           
+                            </div>
+                        )}
+
+                        {/* Additional nested dropdowns can be handled similarly */}
+                    </Card>
+                ))}
+            </div>
+
+          
+  
+
+
+            <div className="ml-10 mt-10">
+                <h1 className="text-xl">Subject Assessment Test-SAT</h1>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg-grid-cols-3 gap-4 p-10">
+                {subjects2.map(({ id, subject, image, status }) => (
+                    <Card key={id}>
+                        <div
+                            onClick={() => handleCardClick(id)}
+                            className="flex w-full gap-x-[15%] cursor-pointer"
+                        >
+                            <Image src={image} width={70} height={70} alt={subject} />
+                            <p className="text-2xl text-gray-700">{subject}</p>
+                        </div>
+                        <div className="flex justify-end">
+                            <p className="text-lg text-gray-400">{status}</p>
+                        </div>
+                        {/* First level dropdown */}
+                        {activeCardId === id && (
+                            <div className="mt-2">
+                                <ul className="bg-white shadow-md rounded p-2">
+                                    <li className="p-2 hover:bg-gray-100" onClick={() => handleOptionClick(id)}>
+                                        Option 1
+                                    </li>
+                                    <li className="p-2 hover:bg-gray-100" onClick={() => handleOptionClick(id)}>
+                                        Option 2
+                                    </li>
+                                    <li className="p-2 hover:bg-gray-100" onClick={() => handleOptionClick(id)}>
+                                        Option 3
+                                    </li>
+                                    {/* Add more options as needed */}
+                                </ul>
+                            </div>
+                        )}
+
+                        {/* Second level dropdown */}
+                        {activeCardId === id && activeOptionId === id && (
+                            <div className="mt-2">
+                               <Link href={`/applicants/assessment/${id}`}>
+                               <ul className="bg-white shadow-md rounded p-2">
+                                 
+                                 <li className="p-2 hover:bg-gray-100" onClick={() => handleSubOptionClick(id)}>
+                                     Sub-Option 1
+                                 </li>
+                                 <li className="p-2 hover:bg-gray-100" onClick={() => handleSubOptionClick(id)}>
+                                 Sub-Option 2
+                                 </li>
+                                 
+                                 {/* Add more sub-options as needed */}
+                             </ul>
+                               </Link>
+                           
+                            </div>
+                        )}
+
+                        {/* Additional nested dropdowns can be handled similarly */}
+                    </Card>
+                ))}
+            </div>
+
+   
     </>
   );
 };

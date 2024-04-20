@@ -26,7 +26,8 @@
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
     "react-hot-toast": "^2.4.1",
-    "react-pro-sidebar": "^1.1.0"
+    "react-pro-sidebar": "^1.1.0",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

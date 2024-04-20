@@ -10,6 +10,7 @@ import {
   Users,
   ScanEye,
 } from 'lucide-react';
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import {
   Sidebar,
@@ -20,6 +21,13 @@ import {
 } from 'react-pro-sidebar';
 
 const SuperAdminNavbar = () => {
+  
+  const handleSignOut = async () => {
+    const data = await signOut({ redirect: true, callbackUrl: '/' })
+    
+  
+
+  }
   return (
     <div className="h-screen bg-white shadow">
       <Sidebar
@@ -90,7 +98,7 @@ const SuperAdminNavbar = () => {
           </MenuItem>
           <hr />
 
-          <MenuItem icon={<LogOutIcon />} component={<Link href="/" />}>
+          <MenuItem icon={<LogOutIcon />}  onClick={handleSignOut}>
             Logout
           </MenuItem>
         </Menu>

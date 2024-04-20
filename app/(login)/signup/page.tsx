@@ -16,14 +16,16 @@ import React, { useState } from 'react';
 import { cities } from './cities';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 interface FormValues {
-  fullName: String;
+  name: String;
   fatherName: String;
   email: String;
-  phone: number;
-  dob: Date;
+  phoneNumber : string;
+  dateofBirth: string;
   password: string;
+  city:string;
 }
 const getPasswordStrength = (password: string): string => {
   // You can define your own rules for password strength calculation
@@ -53,10 +55,23 @@ const SignUp = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setLoading(true);
-    const response = await axios.post(`/api/signup`, { data });
+    try {
+      data.dateofBirth = new Date(data.dateofBirth).toISOString()
+      data.phoneNumber = data.phoneNumber.toString()
+      
+      await axios.post(`/api/register`, data);
+     toast.success('Account Created Sucessfully')
+    } catch (error) {
+      console.error('Error occurred while submitting the form:', error);
+    } finally {
+      router.push('/')
+      setLoading(false);
+    }
   };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -69,16 +84,16 @@ const SignUp = () => {
             <div className="mt-4">
               <Label htmlFor="full_name" value="Full Name" />
               <TextInput
-                {...register('fullName', { required: 'Full name is required' })}
+                {...register('name', { required: 'Full name is required' })}
                 type="Name"
                 id="fullName"
                 shadow
                 icon={HiOutlineUserCircle}
                 placeholder="Full Name"
               />
-              {errors.fullName && (
+              {errors.name && (
                 <span className=" text-sm text-red-500">
-                  {errors.fullName.message}
+                  {errors.name.message}
                 </span>
               )}{' '}
             </div>
@@ -94,9 +109,9 @@ const SignUp = () => {
                 icon={HiOutlineUserCircle}
                 placeholder="Father Name"
               />
-              {errors.fullName && (
+              {errors.fatherName && (
                 <span className=" text-sm text-red-500">
-                  {errors.fullName.message}
+                  {errors.fatherName.message}
                 </span>
               )}
             </div>
@@ -105,13 +120,13 @@ const SignUp = () => {
               <TextInput
                 shadow
                 type="date"
-                {...register('dob', {
+                {...register('dateofBirth', {
                   required: 'Date of birth required',
                 })}
               />
-              {errors.dob && (
+              {errors.dateofBirth && (
                 <span className="text-sm text-red-500">
-                  {errors.dob.message}
+                  {errors.dateofBirth.message}
                 </span>
               )}
             </div>
@@ -145,12 +160,17 @@ const SignUp = () => {
               </div>
               <div className="mt-4">
                 <Label value="City" />
-                <Select>
+                <Select {...register('city', { required: 'city is required' })}>
+                
                   {cities.map(({ city }) => (
+                    
                     <option key={city} value={city}>
+                      
                       {city}
+                    
                     </option>
                   ))}
+                  
                 </Select>
               </div>
               <div className="mt-4">
@@ -216,7 +236,7 @@ const SignUp = () => {
                 <Label value="Phone" />
                 <TextInput
                   type="number"
-                  {...register('phone', {
+                  {...register('phoneNumber', {
                     valueAsNumber: true,
                     required: 'Phone number is required',
                     max: {
@@ -228,9 +248,9 @@ const SignUp = () => {
                   shadow
                   placeholder="03xxxxxxx"
                 />
-                {errors.phone && (
+                {errors.phoneNumber && (
                   <span className=" text-sm text-red-500">
-                    {errors.phone.message}
+                    {errors.phoneNumber.message}
                   </span>
                 )}
               </div>
@@ -249,6 +269,7 @@ const SignUp = () => {
                 </Button>
               ) : (
                 <button
+                
                   type="submit"
                   className="w-full px-6 py-2 bg-black text-white rounded hover:bg-gray-800 focus:outline-none"
                 >

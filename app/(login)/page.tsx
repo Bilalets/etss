@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Label, TextInput } from 'flowbite-react';
 import { HiOutlineUserCircle, HiOutlineLockOpen } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
@@ -7,6 +7,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import { AiOutlineLoading } from 'react-icons/ai';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 interface FormValues {
   email: string;
@@ -15,12 +16,40 @@ interface FormValues {
 
 const LoginScreen: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const {data:session}=useSession()
   const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
+
+
+  useEffect(() => {
+    if (session?.user?.email) {
+        
+        if (session.user.email === 'ots123@gmail.com') {
+            router.replace('/Admin/dashboard/upload');
+        } 
+    }
+
+    if (session?.user?.email) {
+        
+      if (session.user.email === 'applicant123@gmail.com') {
+          router.replace('/applicants/home');
+      } 
+  }
+
+  if (session?.user?.email) {
+        
+    if (session.user.email === 'admin123@gmail.com') {
+        router.replace('/superadmin/dashboard/statistics');
+    } 
+}
+
+}, [session, router])
+
+
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     setLoading(true);
@@ -35,8 +64,10 @@ const LoginScreen: React.FC = () => {
           setLoading(false);
         }
         if (callback?.ok && !callback.error) {
+          
           toast.success('Logged in success ');
-          router.replace('/superadmin/dashboard/statistics');
+          
+          router.replace('/applicants/dashboard');
         }
       })
       .finally(() => setLoading(false));
