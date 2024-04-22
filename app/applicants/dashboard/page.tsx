@@ -1,14 +1,15 @@
 "use client"
 import React from "react";
-import ReactECharts from "echarts-for-react";
-import Gauge from "./charts/Guage";
-import Line from "./charts/Line";
-import Pie from "./charts/Pie";
-import Bargraph from "./charts/Bargraph";
-import Piechart from "./charts/Piechart";
-import Piechart1 from "./charts/Piechart1";
 
-import { useSession } from "next-auth/react";
+
+import Image from "next/image";
+import dynamic from "next/dynamic";
+const DynamicGauge = dynamic(() => import("./charts/Guage"), { ssr: false });
+const DynamicLine = dynamic(() => import("./charts/Line"), { ssr: false });
+const DynamicPie = dynamic(() => import("./charts/Pie"), { ssr: false });
+const DynamicBargraph = dynamic(() => import("./charts/Bargraph"), { ssr: false });
+const DynamicPiechart = dynamic(() => import("./charts/Piechart"), { ssr: false });
+const DynamicPiechart1 = dynamic(() => import("./charts/Piechart1"), { ssr: false });
 const Dashboard = () => {
 
   return (
@@ -29,11 +30,8 @@ const Dashboard = () => {
                 <li className="py-3 sm:py-4">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <img
-                        className="w-8 h-8 "
-                        src="/images/No.png"
-                        alt="Neil image"
-                      />
+                     
+                      <Image  className="w-8 h-8 " src={"/images/No.png"} alt="Neil image"/>
                     </div>
                     <div className="flex-1 min-w-0 ms-4">
                       <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
@@ -48,7 +46,7 @@ const Dashboard = () => {
                 <li className="py-3 sm:py-4">
                   <div className="flex items-center ">
                     <div className="flex-shrink-0">
-                      <img
+                      <Image
                         className="w-8 h-8 rounded-full"
                         src="/images/Best.png"
                         alt="Bonnie image"
@@ -67,7 +65,7 @@ const Dashboard = () => {
                 <li className="py-3 sm:py-4">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <img
+                      <Image
                         className="w-8 h-8 rounded-full"
                         src="/images/pass.png"
                         alt="Michael image"
@@ -86,7 +84,7 @@ const Dashboard = () => {
                 <li className="py-3 sm:py-4">
                   <div className="flex items-center ">
                     <div className="flex-shrink-0">
-                      <img
+                      <Image
                         className="w-8 h-8 rounded-full"
                         src="/images/Fail.png"
                         alt="Lana image"
@@ -105,7 +103,7 @@ const Dashboard = () => {
                 <li className="pt-3 pb-0 sm:pt-4">
                   <div className="flex items-center ">
                     <div className="flex-shrink-0">
-                      <img
+                      <Image
                         className="w-8 h-8 rounded-full"
                         src="/images/dislike.png"
                         alt="Thomas image"
@@ -135,7 +133,7 @@ const Dashboard = () => {
              Overall Performence
           </h5>
         <div>
-        <Line/>
+        <DynamicLine/>
         </div>
          
         </div>
@@ -145,7 +143,7 @@ const Dashboard = () => {
             Total Time Spent
           </h5>
         <div className="h-[300px] w-[300px]">
-        <Gauge/>
+        <DynamicGauge/>
         </div>
            
         </div>
@@ -164,7 +162,7 @@ const Dashboard = () => {
 
            
             <div className="h-[130px] w-[130px] mt-[-90px]">
-              <Piechart1/>
+              <DynamicPiechart1/>
             </div>
           
           </div>
@@ -175,7 +173,7 @@ const Dashboard = () => {
             </div>
 
             <div className="h-[130px] w-[130px] mt-[-90px]">
-              <Piechart/>
+              <DynamicPiechart/>
             </div>
           </div>
         </div>
@@ -186,7 +184,7 @@ const Dashboard = () => {
             Course Performance
           </h5>
           <div className="">
-          <Bargraph/>
+          <DynamicBargraph/>
           </div>
         </div>
 
@@ -195,7 +193,7 @@ const Dashboard = () => {
              Overall Stats in Pie
           </h5>
           <div className="ml-8">
-          <Pie/>
+          <DynamicPie/>
           </div>
           
         </div>

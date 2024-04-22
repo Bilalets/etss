@@ -5,7 +5,7 @@ import { PlusCircle, Save, SquarePen, Trash2, XCircle } from 'lucide-react';
 import React, { useState } from 'react';
 
 
-const editcat = () => {
+const Editcat = () => {
     
     const [openAddSubject, setOpenAddSubject] = useState(false);
   const subjects = [
@@ -56,4 +56,4 @@ return (
 )
 }
 
-export default editcat;
+export default Editcat;

@@ -8,6 +8,13 @@ import TopTen from './TopTen';
 import StaffAttendance from './StaffAttendance';
 import Annual from './Annual';
 import SuperAdminHeader from '../../components/super_admin_header';
+import dynamic from 'next/dynamic';
+const DynamicbarChart = dynamic(() => import("./Barchart"), { ssr: false });
+const DynamicoverviewChart = dynamic(() => import("./Overview"), { ssr: false });
+const DynamicStudentAttendance = dynamic(() => import("./StudentAttendance"), { ssr: false });
+const DynamicTopTen  = dynamic(() => import("./TopTen"), { ssr: false });
+const DynamicStaffAttendance = dynamic(() => import("./StaffAttendance"), { ssr: false });
+const DynamicAnnual = dynamic(() => import('./Annual'), { ssr: false });
 
 const cardInfo = [
   { title: 'Excellent Branch', icon: <ThumbsUp />, name: 'Branch A' },
@@ -37,28 +44,28 @@ const Statistics = () => {
         {/* barchart and pie chart*/}
         <div className="flex flex-col md:flex-row justify-between mt-4 gap-x-2">
           <Card className="flex-grow">
-            <Barchart />
+            <DynamicbarChart />
           </Card>
           <Card className="w-1/4">
-            <Overview />
+            <DynamicoverviewChart />
           </Card>
         </div>
         {/* student and top ten  */}
         <div className="w-full flex flex-col md:flex-row gap-x-2 mt-5">
           <Card className="w-[40%]">
-            <StudentAttendance />
+            <DynamicStudentAttendance />
           </Card>
           <Card className="flex-grow">
-            <TopTen />
+            <DynamicTopTen />
           </Card>
         </div>
         {/* staff attendance and annual report*/}
         <div className="w-full flex flex-col md:flex-row gap-x-2 mt-5">
           <Card className="flex-grow">
-            <Annual />
+            <DynamicAnnual />
           </Card>
           <Card className="w-1/3 ">
-            <StaffAttendance />
+            <DynamicStaffAttendance />
           </Card>
         </div>
       </div>

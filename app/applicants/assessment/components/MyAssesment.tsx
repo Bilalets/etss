@@ -64,7 +64,7 @@ const TestStart = () => {
     } else {
       setShowResult(true);
     }
-  }, [activeQuestion, questions.length, time]);
+  }, [activeQuestion, questions.length, time,counter]);
   useEffect(() => {
     const timer = setInterval(() => {
       setRemainingSeconds((prevSeconds) => {
@@ -83,7 +83,7 @@ const TestStart = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [activeQuestion, nextQuestion]);
+  }, [activeQuestion, nextQuestion,time]);
 
   const handleAnswerClick = (answer: string, index: number) => {
     setSelectedAnswerIndex(index);

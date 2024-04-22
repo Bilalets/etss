@@ -11,9 +11,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { TextInput } from "flowbite-react";
 import toast from "react-hot-toast";
 import Profilemodel from "./Profilemodel";
+import Image from "next/image";
 
 
-const profile: React.FC = () => {
+const Profile: React.FC = () => {
   const { data: session, status } = useSession();
   const [username, setName] = useState<string>("");
   const [setfather, setfatherName] = useState<string>("dummy");
@@ -101,9 +102,10 @@ const profile: React.FC = () => {
                   </div>
 
                   <div className="flex ml-40 ">
-                    <img
+                    <Image
                       src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg"
                       className="h-32 w-32 rounded-full"
+                      alt="ss"
                     />
                   </div>
                 </div>
@@ -178,4 +180,4 @@ const profile: React.FC = () => {
   );
 };
 
-export default profile;
+export default Profile;

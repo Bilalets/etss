@@ -5,7 +5,7 @@ import { PlusCircle, Save, SquarePen, Trash2, XCircle } from 'lucide-react';
 import React, { useState } from 'react';
 
 
-const editproduct = () => {
+const Editproduct = () => {
   
     const [openAddSubject, setOpenAddSubject] = useState(false);
   const subjects = [
@@ -56,4 +56,4 @@ return (
 )
 }
 
-export default editproduct;
+export default Editproduct;

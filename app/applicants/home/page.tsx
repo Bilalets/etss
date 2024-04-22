@@ -166,25 +166,7 @@ const handleSubOptionClick = (subOptionId: number) => {
                         )}
 
                         {/* Second level dropdown */}
-                        {activeCardId === id && activeOptionId === id && (
-                            <div className="mt-2">
-                               <Link href={`/applicants/assessment/${id}`}>
-                               <ul className="bg-white shadow-md rounded p-2">
-                                 
-                                 <li className="p-2 hover:bg-gray-100" onClick={() => handleSubOptionClick(id)}>
-                                     Sub-Option 1
-                                 </li>
-                                 <li className="p-2 hover:bg-gray-100" onClick={() => handleSubOptionClick(id)}>
-                                 Sub-Option 2
-                                 </li>
-                                 
-                                 {/* Add more sub-options as needed */}
-                             </ul>
-                               </Link>
-                           
-                            </div>
-                        )}
-
+                    
                         {/* Additional nested dropdowns can be handled similarly */}
                     </Card>
                 ))}
@@ -226,25 +208,7 @@ const handleSubOptionClick = (subOptionId: number) => {
                         )}
 
                         {/* Second level dropdown */}
-                        {activeCardId === id && activeOptionId === id && (
-                            <div className="mt-2">
-                               <Link href={`/applicants/assessment/${id}`}>
-                               <ul className="bg-white shadow-md rounded p-2">
-                                 
-                                 <li className="p-2 hover:bg-gray-100" onClick={() => handleSubOptionClick(id)}>
-                                     Sub-Option 1
-                                 </li>
-                                 <li className="p-2 hover:bg-gray-100" onClick={() => handleSubOptionClick(id)}>
-                                 Sub-Option 2
-                                 </li>
-                                 
-                                 {/* Add more sub-options as needed */}
-                             </ul>
-                               </Link>
-                           
-                            </div>
-                        )}
-
+                       
                         {/* Additional nested dropdowns can be handled similarly */}
                     </Card>
                 ))}
@@ -289,24 +253,7 @@ const handleSubOptionClick = (subOptionId: number) => {
                         )}
 
                         {/* Second level dropdown */}
-                        {activeCardId === id && activeOptionId === id && (
-                            <div className="mt-2">
-                               <Link href={`/applicants/assessment/${id}`}>
-                               <ul className="bg-white shadow-md rounded p-2">
-                                 
-                                 <li className="p-2 hover:bg-gray-100" onClick={() => handleSubOptionClick(id)}>
-                                     Sub-Option 1
-                                 </li>
-                                 <li className="p-2 hover:bg-gray-100" onClick={() => handleSubOptionClick(id)}>
-                                 Sub-Option 2
-                                 </li>
-                                 
-                                 {/* Add more sub-options as needed */}
-                             </ul>
-                               </Link>
-                           
-                            </div>
-                        )}
+                     
 
                         {/* Additional nested dropdowns can be handled similarly */}
                     </Card>

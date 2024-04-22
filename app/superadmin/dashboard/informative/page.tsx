@@ -1,3 +1,4 @@
+"use client"
 import { Card } from 'flowbite-react';
 import {
   CircleUser,
@@ -10,7 +11,9 @@ import React from 'react';
 import StaffChart from './Staffchart';
 import Studentchart from './Studentchart';
 import SuperAdminHeader from '../../components/super_admin_header';
-
+import dynamic from 'next/dynamic';
+const DynamicStaffChart = dynamic(() => import("./Staffchart"), { ssr: false });
+const DynamicStudentChart = dynamic(() => import("./Studentchart"), { ssr: false });
 const cardInfo = [
   { title: 'Total Branches', icon: <LayoutPanelTop />, value: '6' },
   { title: 'Total Principals', icon: <UserRoundCog />, value: '6' },
@@ -40,11 +43,11 @@ const page = () => {
 
         <div className="flex flex-col md:flex-row justify-between mt-4 gap-x-2">
           <Card className="flex-grow">
-            <StaffChart />
+            <DynamicStaffChart/>
           </Card>
           <Card className="w-[40%]">
             <div className="w-full h-full">
-              <Studentchart />
+              <DynamicStudentChart />
             </div>
           </Card>
         </div>
