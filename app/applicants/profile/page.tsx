@@ -13,15 +13,15 @@ import toast from "react-hot-toast";
 import Profilemodel from "./Profilemodel";
 import Image from "next/image";
 
-
 const Profile: React.FC = () => {
   const { data: session, status } = useSession();
-  const [username, setName] = useState<string>("");
-  const [setfather, setfatherName] = useState<string>("dummy");
-  const [setPhone, setPhoneNumber] = useState<string>("111111");
+  const [username, setName] = useState<string>();
+  const [setfather, setfatherName] = useState<string>();
+  const [setPhone, setPhoneNumber] = useState<string>();
+  const [setDateofbirth, getDateofbirth] = useState<string>();
   const [userData, setUserData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [open,isopen]=useState<boolean>(true)
+  const [open, isopen] = useState<boolean>(false);
 
   const onSubmits = async () => {
     try {
@@ -30,6 +30,7 @@ const Profile: React.FC = () => {
         email: `${session?.user?.email}`,
         fatherName: setfather,
         phoneNumber: setPhone,
+        dateofBirth: setDateofbirth,
       });
       toast.success("User updated successfully");
     } catch (error) {
@@ -37,22 +38,6 @@ const Profile: React.FC = () => {
       toast.error("Error updating user");
     }
   };
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (!(event.target instanceof Element)) return;
-
-     
-      if (!document.getElementById('profilemodel')?.contains(event.target)) {
-        isopen(false);
-      }
-    };
-
-    document.body.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.body.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -72,6 +57,113 @@ const Profile: React.FC = () => {
     }
   }, [session]);
 
+  function closemodels() {
+    isopen(false);
+  }
+
+  const model = (
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
+      <div className="relative bg-white rounded-lg p-8 w-[400px] items-center justify-center">
+        <h2 className="text-xl font-semibold mb-4 text-center ">
+          Update User Profile
+        </h2>
+        <div className="bg-gray-100  p-6 rounded-lg ">
+          <div className="justify-center items-center ml-10">
+            <label className="block text-gray-800 font-semibold text-sm">
+              Update Name
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="inputname"
+                className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div>
+              <div>
+                <label className="block text-gray-800 font-semibold text-sm">
+                  Update Father Name
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="inputname"
+                    className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                    onChange={(e) => setfatherName(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-gray-800 font-semibold text-sm">
+                  Phone-Number
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="inputname"
+                    className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-gray-800 font-semibold text-sm">
+                  Date of Birth
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="date"
+                    name="inputname"
+                    className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                    onChange={(e) => getDateofbirth(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-gray-800 font-semibold text-sm">
+                  Enter New Password
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="password"
+                    name="inputname"
+                    className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-800 font-semibold text-sm">
+                    Confirm Password
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="password"
+                      name="inputname"
+                      className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button
+          onClick={onSubmits}
+          type="button"
+          className="text-white bg-[#050708]  ml-32 hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 me-2 mb-2"
+        >
+          Update
+        </button>
+        <button           className="text-white bg-[#050708]  ml-32 hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 me-2 mb-2"
+ onClick={() => closemodels()}>Close</button>
+      </div>
+    </div>
+  );
+
   return (
     <div>
       {loading ? (
@@ -90,8 +182,11 @@ const Profile: React.FC = () => {
                         User Profile
                       </h3>
                       <div>
-                        <button  onClick={()=>isopen(pre=>!pre)} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                         <Pencil/>
+                        <button
+                          onClick={() => isopen((pre) => !pre)}
+                          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                        >
+                          <Pencil />
                         </button>
                       </div>
                     </div>
@@ -103,9 +198,11 @@ const Profile: React.FC = () => {
 
                   <div className="flex ml-40 ">
                     <Image
-                      src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg"
+                      src="/images/person.jpeg"
                       className="h-32 w-32 rounded-full"
                       alt="ss"
+                      width={128}
+                      height={128}
                     />
                   </div>
                 </div>
@@ -118,7 +215,6 @@ const Profile: React.FC = () => {
 
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                         {item.name}
-                       
                       </dd>
                     </div>
                     <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -165,17 +261,11 @@ const Profile: React.FC = () => {
                   </dl>
                 </div>
               </div>
-              <button
-                onClick={onSubmits}
-                className=" bg-blue-500 hover:bg-blue-700 ml-10 mt-5 text-white font-bold py-2 px-4 border border-blue-700 rounded"
-              >
-                Update
-              </button>
             </div>
           </div>
         ))
       )}
-    {open && <Profilemodel  />}  
+      {open && model}
     </div>
   );
 };

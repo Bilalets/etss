@@ -19,6 +19,7 @@ export async function GET(
         fatherName:true,
         city:true,
         phoneNumber:true,
+        dateofBirth:true,
         
       },
     });

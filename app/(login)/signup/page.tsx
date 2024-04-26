@@ -237,13 +237,16 @@ const SignUp = () => {
                 <TextInput
                   type="number"
                   {...register('phoneNumber', {
-                    valueAsNumber: true,
                     required: 'Phone number is required',
-                    max: {
-                      value: 11,
-                      message: 'Phone number must be 11 digits',
+                    maxLength: {
+                        value: 11,
+                        message: 'Phone number must be 11 digits',
                     },
-                  })}
+                    pattern: {
+                        value: /^\d{11}$/,
+                        message: 'Phone number must be exactly 11 digits',
+                    },
+                })}
                   icon={HiOutlinePhone}
                   shadow
                   placeholder="03xxxxxxx"

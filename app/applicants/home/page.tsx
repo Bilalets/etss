@@ -26,13 +26,7 @@ const Home = () => {
       status: "Available",
       option:["Writing","Listening","Speaking","Reading"]
     },
-    {
-      id: 3,
-      subject: "General Test",
-      image: "/images/general.png",
-      status: "Available",
-      option:["Quantitative reasoning"," Verbal reasoning", " Analytical reasoning"]
-    },
+   
     {
       id: 4,
       subject: "FIA",
@@ -134,57 +128,59 @@ const handleSubOptionClick = (subOptionId: number) => {
        <div className="ml-10 mt-10">
                 <h1 className="text-xl">Self Assessment Test-SAT</h1>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg-grid-cols-3 gap-4 p-10">
-                {subjects.map(({ id, subject, image, status,option=[] }) => (
-                    <Card key={id}>
-                        <div
-                            onClick={() => handleCardClick(id)}
-                            className="flex w-full gap-x-[15%] cursor-pointer "
-                        >
-                            <Image src={image} width={70} height={70} alt={subject} />
-                            <p className="text-2xl text-gray-700">{subject}</p>
-                        </div>
-                        <div className="flex justify-end">
-                            <p className="text-lg text-gray-400">{status}</p>
-                        </div>
-                        {/* First level dropdown */}
-                        {activeCardId === id && (
-                            <div className="mt-2 ">
-                                <ul className="bg-white shadow-md rounded p-2">
-                                {option.map((opt, index) => (
-            <li
-                key={index} // Ensure each item has a unique key
-                className="p-2 hover:bg-gray-100"
-                onClick={() => handleOptionClick(id)} // Pass the option index if needed
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-10">
+    {subjects.map(({ id, subject, image, status, option = [] }) => (
+        <Card key={id}>
+            <div
+               
+                className="flex w-full gap-x-[15%] cursor-pointer"
             >
-                {opt}
-            </li>
-        ))}
-                                    {/* Add more options as needed */}
-                                </ul>
-                            </div>
-                        )}
-
-                        {/* Second level dropdown */}
-                    
-                        {/* Additional nested dropdowns can be handled similarly */}
-                    </Card>
-                ))}
+                <Image src={image} width={50} height={50} alt={subject} />
+                <Link href={`/applicants/home/${id}`}>
+                <p className="text-2xl text-gray-700">{subject}</p>
+                </Link>
+               
             </div>
+            <div className="flex justify-end">
+                <p className="text-lg text-gray-400">{status}</p>
+            </div>
+            {/* First level dropdown */}
+            {activeCardId === id && (
+                <div className="relative mt-2">
+                    <ul className="absolute z-10 bg-white shadow-md rounded p-2 top-full left-0 w-full max-h-40 overflow-y-auto">
+                        {option.map((opt, index) => (
+                            <li
+                                key={index}
+                                className="p-2 hover:bg-gray-100"
+                                onClick={() => handleOptionClick(id)}
+                            >
+                                {opt}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+            {/* Second level dropdown */}
+            {/* Additional nested dropdowns can be handled similarly */}
+        </Card>
+    ))}
+</div>
 
 
             <div className="ml-10 mt-10">
                 <h1 className="text-xl">Scholistic Assessment Test-SAT</h1>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg-grid-cols-3 gap-4 p-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-10">
                 {subjects1.map(({ id, subject, image, status }) => (
                     <Card key={id}>
                         <div
                             onClick={() => handleCardClick(id)}
                             className="flex w-full gap-x-[15%] cursor-pointer"
                         >
-                            <Image src={image} width={70} height={70} alt={subject} />
-                            <p className="text-2xl text-gray-700">{subject}</p>
+                            <Image src={image} width={50} height={50} alt={subject} />
+                            <Link href={`/applicants/home/${id}`}>
+                <p className="text-2xl text-gray-700">{subject}</p>
+                </Link>
                         </div>
                         <div className="flex justify-end">
                             <p className="text-lg text-gray-400">{status}</p>
@@ -221,15 +217,18 @@ const handleSubOptionClick = (subOptionId: number) => {
             <div className="ml-10 mt-10">
                 <h1 className="text-xl">Subject Assessment Test-SAT</h1>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg-grid-cols-3 gap-4 p-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-10">
                 {subjects2.map(({ id, subject, image, status }) => (
                     <Card key={id}>
                         <div
-                            onClick={() => handleCardClick(id)}
+                           
                             className="flex w-full gap-x-[15%] cursor-pointer"
                         >
-                            <Image src={image} width={70} height={70} alt={subject} />
+                            <Image src={image} width={50} height={50} alt={subject} />
+                            <Link href={`/applicants/home/${id}`} >
                             <p className="text-2xl text-gray-700">{subject}</p>
+                            </Link>
+                            
                         </div>
                         <div className="flex justify-end">
                             <p className="text-lg text-gray-400">{status}</p>

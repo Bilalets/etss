@@ -21,6 +21,10 @@ import {
   Boxes,
   LibraryBig,
   PencilRulerIcon,
+  Scroll,
+  Rows4,
+  NotebookText,
+  GanttChart,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -60,65 +64,74 @@ const admin_navbar = () => {
               Dashboard
             </MenuItem>
             <hr />
-            <SubMenu icon={<PackageSearch />} label={"Product"} component={<Link href={"/Admin/dashboard/product/displayproduct"}/>}>
+          
 
             <MenuItem
-              icon={<PencilRuler />}
-              component={<Link href="/Admin/dashboard/product/createproduct" />}
+              icon={<Rows4 />}
+              component={<Link href={"/Admin/dashboard/product/displayproduct"}/>}
             >
-             Create Product
+             Services
             </MenuItem>
+            
+          
+            
             <hr />
             <MenuItem
-              icon={<Pencil />}
-              component={<Link href="/Admin/dashboard/product/editproduct" />}
+                icon={<SquareGanttIcon />}
+                component={<Link href="/Admin/dashboard/subproducts/create-subproduct" />}
+              >
+               Category
+              </MenuItem>
+        
+          <hr />
+            
+            <MenuItem
+              icon={<GanttChart />}
+              component={<Link href="/Admin/dashboard/category/create-subcategory" />}
             >
-             Edit Product
+              SubCategory
             </MenuItem>
-            </SubMenu>
+            <hr />
+            
+            <MenuItem
+              icon={<NotebookText />}
+              component={<Link href="/Admin/dashboard/subcategory/create-subject" />}
+            >
+               Subject
+            </MenuItem>
             
             <hr />
           
-          <SubMenu icon={<Boxes/>} label="Sub-Product">
-          <MenuItem
-                icon={<PencilRuler />}
-                component={<Link href="/Admin/dashboard/subproducts/create-subproduct" />}
-              >
-                Create Sub-Product
-              </MenuItem>
-              <hr />
-          <MenuItem
-                icon={<Pencil />}
-                component={<Link href="/Admin/dashboard/subproducts/edit-subproduct" />}
-              >
-                Edit Sub-Product
-              </MenuItem>
-            <hr />
-           
-              <hr />
-          </SubMenu>
-          <hr />
-            
-            <SubMenu  icon={<LibraryBig />} label='Category'>
+         
             <MenuItem
-              icon={<PencilRulerIcon />}
-              component={<Link href="/Admin/dashboard/category/create-category" />}
+              icon={<PencilRuler />}
+              component={<Link href="/Admin/dashboard/pattern/create-pattern" />}
             >
-              Create Category
+              Chapters
             </MenuItem>
             <hr />
+
+            <SubMenu icon={<Upload/>} label='QB/Upload'>
+           
+
+
+            <MenuItem
+              icon={<NotebookText/>}
+              component={<Link href="/Admin/dashboard/upload" />}
+            >
+              Create Subject
+            </MenuItem>
             <MenuItem
               icon={<Pencil />}
-              component={<Link href="/Admin/dashboard/category/edit-category" />}
+              component={<Link href="/Admin/dashboard/upload/editupload" />}
             >
-              Edit Category
+              Edit Subject
             </MenuItem>
-            </SubMenu>
-            
             <hr />
-            
-         
+            </SubMenu>
 
+
+            <hr />
             <SubMenu  icon={<BookOpenCheck />} label='Assessment'>
             <MenuItem
               icon={<PencilRulerIcon />}
@@ -134,15 +147,11 @@ const admin_navbar = () => {
               Edit Assessment
             </MenuItem>
             </SubMenu>
-            <hr />
+           
             
-            
-            <MenuItem
-              icon={<Upload />}
-              component={<Link href="/Admin/dashboard/upload" />}
-            >
-              QB/Upload
-            </MenuItem>
+          
+
+           
             <hr />
             <MenuItem icon={<LogOutIcon />} component={<Link href="/" />} onClick={ handleSignOut}>
               Logout

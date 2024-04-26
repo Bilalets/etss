@@ -31,7 +31,7 @@ const Dashboard = () => {
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                      
-                      <Image  className="w-8 h-8 " src={"/images/No.png"} alt="Neil image"/>
+                      <Image  className="w-8 h-8 " src={"/images/No.png"} alt="Neil image" width={50} height={50}/>
                     </div>
                     <div className="flex-1 min-w-0 ms-4">
                       <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
@@ -50,6 +50,7 @@ const Dashboard = () => {
                         className="w-8 h-8 rounded-full"
                         src="/images/Best.png"
                         alt="Bonnie image"
+                        width={50} height={50}
                       />
                     </div>
                     <div className="flex-1 min-w-0 ms-4">
@@ -69,6 +70,7 @@ const Dashboard = () => {
                         className="w-8 h-8 rounded-full"
                         src="/images/pass.png"
                         alt="Michael image"
+                        width={50} height={50}
                       />
                     </div>
                     <div className="flex-1 min-w-0 ms-4">
@@ -88,6 +90,7 @@ const Dashboard = () => {
                         className="w-8 h-8 rounded-full"
                         src="/images/Fail.png"
                         alt="Lana image"
+                        width={50} height={50}
                       />
                     </div>
                     <div className="flex-1 min-w-0 ms-4">
@@ -107,6 +110,7 @@ const Dashboard = () => {
                         className="w-8 h-8 rounded-full"
                         src="/images/dislike.png"
                         alt="Thomas image"
+                        width={50} height={50}
                       />
                     </div>
                     <div className="flex-1 min-w-0 ms-4">
