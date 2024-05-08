@@ -1,74 +1,401 @@
-import React from 'react'
+"use client";
 
-const uploadques = () => {
-  return (
-    <>
-     {/* <div className="flex ml-[550px] mt-10 gap-5">
-        <input
-          className="relative bg-gray-50ring-0 outline-none border border-neutral-500 text-neutral-900 placeholder-violet-700 text-sm rounded-lg focus:ring-violet-500  focus:border-violet-500 block w-64 p-2.5 checked:bg-emerald-500"
-          placeholder="Create Subject"
-          onChange={(e) => setsubs(e.target.value)}
-        />
-        <button
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-          onClick={addnewsubject}
-        >
-          Create Subject
-        </button>
-      </div> */}
-
-
-<div className="flex flex-col items-center justify-center h-screen dark text-black  ">
-        <div className=" flex flex-col w-full max-w-md bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-black mb-4">
-            Upload Questions To Database
-          </h2>
-          <p>Select Subject</p>
-          <select className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150" id="product">
-        <option value="product-1">English</option>
-        <option value="product-2">Urdu</option>
-        <option value="product-3">Maths</option>
-      </select>
-          <p>Enter Question</p>
-          <input placeholder="Enter Question Text" className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150" type="text"/>
-          <p>Enter Answer-1</p>
-          <input placeholder="Enter Awnser-1 Text" className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150" type="text"/>
-          <p>Enter Answer-2</p>
-          <input placeholder="Enter Awnser-2 Text" className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150" type="text"/>
-          <p>Enter Answer-3</p>
-          <input placeholder="Enter Awnser-3 Text" className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150" type="text"/>
-          <p>Enter Answer-4</p>
-          <input placeholder="Enter Awnser-4 Text" className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150" type="text"/>
-          <p>Enter Correct-Answer</p>
-          <input placeholder="Enter Awnser-5 Text" className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150" type="text"/>
-        
-          {/*  <p>Select Difficulty Level</p>
-        
-          <select
-            className="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-            id="product"
-            value={selectedLevel}
-            onChange={handleLevelChange}
-          >
-            <option value="easy">easy</option>
-            <option value="medium">medium</option>
-            <option value="hard">hard</option>
-          </select> */}
-         
-
-          <button
-            className="bg-black text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
-            type="submit"
-           
-          >
-            Submit
-          </button>
-        </div>
-      </div>
-   
-
-    </>
-  )
+import axios from "axios";
+import {
+  BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  PlayIcon,
+  Redo,
+  SaveIcon,
+  Undo,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import {
+  Sidebar,
+  Menu,
+  MenuItem,
+  SubMenu,
+  sidebarClasses,
+} from "react-pro-sidebar";
+type QuestionRequestData = {
+  questionName: string | undefined;
+  awnsers: (string | undefined)[];
+  correctAwnser: string | undefined;
+  subcategoryId?: string;
+  subjectsId?: string;
+  chaptersId?: string;
+};
+interface Chapter {
+  id: string;
+  name: string;
+}
+interface chap {
+  id: string;
+  name: string;
+}
+interface Subject {
+  id: string;
+  name: string;
+  chapters: Chapter[];
 }
 
-export default uploadques;
+interface Subcategory {
+  id: string;
+  name: string;
+  subject: Subject[];
+}
+
+interface Category {
+  id: string;
+  name: string;
+  subcategory: Subcategory[];
+}
+
+interface Test {
+  id: string;
+  name: string;
+  category: Category[];
+}
+const UploadQuestions = () => {
+  const [getdata, setdata] = useState<Test[]>([]);
+  const [question, setQuestion] = useState<string>();
+  const [correctAwn, setCorrectAwn] = useState<string>();
+  const [getchapid, setchapid] = useState<Chapter>();
+  const [awnser1, setAwnser1] = useState<string>();
+  const [awnser2, setAwnser2] = useState<string>();
+  const [awnser3, setAwnser3] = useState<string>();
+  const [awnser4, setAwnser4] = useState<string>();
+  const [selectedSubcategory, setSelectedSubcategory] = useState<Subcategory>();
+  const [selectedSubject, setSelectedSubject] = useState<Subject>();
+  const handleSubcategoryClick = (item: Subcategory) => {
+    setSelectedSubcategory(item);
+  };
+  const handlesubjectClick = (item: Subject) => {
+    setSelectedSubject(item);
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/api/Allservices/");
+
+      const data = response.data;
+      setdata(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const [set, seed] = useState<Subcategory[]>([]);
+  const [translateValue, setTranslateValue] = useState(0);
+  const itemWidth = 40;
+  //
+  const containerWidth = itemWidth * set.length;
+  useEffect(() => {
+    const subcategories: Subcategory[] = [];
+    getdata.forEach((service: Test) => {
+      service.category.forEach((category: Category) => {
+        category.subcategory.forEach((subcategory: Subcategory) => {
+          subcategories.push(subcategory);
+        });
+      });
+    });
+    seed(subcategories);
+  }, [getdata, seed]);
+  const handleMoveRight = () => {
+    const firstItem = set[0];
+    const newSet = set.slice(1).concat(firstItem);
+    seed(newSet);
+
+    const newTranslateValue = translateValue - itemWidth;
+
+    if (Math.abs(newTranslateValue) >= containerWidth) {
+      setTranslateValue(0);
+    } else {
+      setTranslateValue(newTranslateValue);
+    }
+  };
+
+  const handleMoveLeft = () => {
+    const lastItem = set[set.length - 1];
+    const newSet = [lastItem, ...set.slice(0, -1)];
+    seed(newSet);
+
+    const newTranslateValue = translateValue + itemWidth;
+
+    if (newTranslateValue > 0) {
+      setTranslateValue(-(containerWidth - itemWidth));
+    } else {
+      setTranslateValue(newTranslateValue);
+    }
+  };
+
+  let displayService = getdata.map((item) => (
+    <option key={item.id} value={item.id}>
+      {item.name}
+    </option>
+  ));
+
+  let displaycategory = getdata.map((service) => {
+    let categoryElements = service.category.map((category) => (
+      <div key={category.id} className="flex flex-row">{category.name}</div>
+    ));
+
+    return <div key={service.id} className="flex flex-row gap-5 overflow-hidden cursor-pointer">{categoryElements}</div>;
+  });
+
+
+  const handleChapterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedChapterId = event.target.value;
+    const selectedChapter = selectedSubject?.chapters.find(
+      (chapter) => chapter.id === selectedChapterId
+    );
+
+    setchapid(selectedChapter);
+  };
+  const clearInputs = () => {
+    setQuestion('');
+    setCorrectAwn('');
+    setAwnser1('');
+    setAwnser2('');
+    setAwnser3('');
+    setAwnser4("");
+    setSelectedSubcategory(undefined);
+    setSelectedSubject(undefined);
+    setchapid(undefined);
+  };
+  const addQuestion = async () => {
+    try {
+      let requestData: QuestionRequestData = {
+        questionName: question,
+        awnsers: [awnser1, awnser2, awnser3, awnser4],
+        correctAwnser: correctAwn,
+      };
+
+      if (selectedSubcategory && !selectedSubject && !getchapid) {
+        // Subcategory selected
+        requestData.subcategoryId = selectedSubcategory.id;
+        await axios.post("/api/Service/subcatquestions", requestData);
+        
+      } else if (selectedSubject && !getchapid) {
+        // Subject selected
+        requestData.subjectsId = selectedSubject.id;
+        await axios.post("/api/Service/Subjectquestions", requestData);
+       
+      } else if (getchapid) {
+        // Chapter selected
+        requestData.chaptersId = getchapid.id;
+        await axios.post("/api/Service/Chapterquestions", requestData);
+        
+      } else {
+        console.error("Please select a valid subcategory, subject, or chapter");
+      }
+      toast.success("Question saved successfully!");
+      clearInputs()
+    } catch (error) {
+      console.error("Error saving question:", error);
+      toast.error("Failed to save question.");
+    }
+  };
+  return (
+    <>
+      <div className="flex flex-row items-center  ml-[690px] mb-10 gap-5">
+        <div className=" flex ml-[-300px]">
+          <h1 className="text-xl">Select Service</h1>
+        </div>
+        <div className=" flex ml-48">
+          <select
+            id="countries"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            <option selected>Select Service</option>
+
+            {displayService}
+          </select>
+        </div>
+      </div>
+      <div className=" flex flex-col  gap-10">
+        <div className=" flex flex-row rounded-md bg-white gap-14 shadow h-14 w-[600px] ml-[390px] items-center justify-center">
+          <div className=" mt-1 ml-[-160px] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-3xl text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+            Categories
+          </div>
+          <div className="flex flex-row overflow-hidden w-[250px] gap-5">{displaycategory}</div>
+        </div>
+        <div className="flex flex-row bg-white items-center shadow rounded-md   h-16 w-[600px] ml-[390px]">
+          <div className=" ml-3">
+            <button onClick={() => handleMoveLeft()}>
+              {" "}
+              <PlayIcon className="transform -scale-x-100" />
+            </button>
+          </div>
+          <div className="overflow-hidden w-[300px] ml-[100px]">
+            <div
+              className="flex transition-transform duration-300 gap-10 "
+              style={{
+                transform: `translateX(${translateValue}px)`,
+              }}
+            >
+              {set.map((item) => (
+          <div
+            key={item.id}
+            className="cursor-pointer"
+           
+            onClick={() => handleSubcategoryClick(item)}
+          >
+            {item.name}
+          </div>
+        ))}
+            </div>
+          </div>
+
+          <div>
+            <button onClick={() => handleMoveRight()} className=" ml-32">
+              {" "}
+              <PlayIcon className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-row gap-16 ">
+        <div className=" text-center w-[250px] h-[530px]  ml-20 bg-white mb-10 shadow border-1 ">
+          <div className=" flex flex-row gap-6 h-[50px] bg-gray-800 text-white justify-center items-center ">
+            <div>
+              <BookOpen />
+            </div>
+            <div>
+              <h1 className="text-xl">Subjects</h1>
+            </div>
+          </div>
+          <Sidebar
+            rootStyles={{
+              [`.${sidebarClasses.container}`]: {
+                backgroundColor: "#ffffff",
+              },
+            }}
+          >
+            <Menu>
+              <hr />
+              {selectedSubcategory?.subject.map((subject) => (
+                <div key={subject.id}>
+                  <div onClick={() => handlesubjectClick(subject)}>
+                    <hr />
+                    <MenuItem> {subject.name}</MenuItem>
+                  </div>
+                </div>
+              ))}
+
+              <hr />
+            </Menu>
+          </Sidebar>
+        </div>
+
+        <div className=" bg-white shadow mt-8 h-[500px] w-[600px]  p-12 border-1">
+          <div className="w-[200px] ml-80 mb-10">
+            <select
+              id="countries"
+              onChange={handleChapterChange}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option>Select Chapter</option>
+              {selectedSubject?.chapters?.map((chapter) => {
+                return (
+                  <option key={chapter.id} value={chapter.id}>
+                    {chapter.name}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div className=" flex flex-row gap-10 ">
+            <div className="flex flex-col">
+              <div>
+                <p className=" font-semibold">Question</p>
+                <input
+                  placeholder="Enter Awnser-5 Text"
+                  className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+                  type="text"
+                  onChange={(e) => setQuestion(e.target.value)}
+                />
+              </div>
+              <div>
+                <p className=" font-semibold">Awnser 1</p>
+                <input
+                  placeholder="Enter Awnser-5 Text"
+                  className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+                  type="text"
+                  onChange={(e) => setAwnser1(e.target.value)}
+                />
+              </div>
+              <div>
+                <p className=" font-semibold">Awnser 2</p>
+                <input
+                  placeholder="Enter Awnser-5 Text"
+                  className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+                  type="text"
+                  onChange={(e) => setAwnser2(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <div>
+                <p className=" font-semibold">Awnser 3</p>
+                <input
+                  placeholder="Enter Awnser-5 Text"
+                  className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+                  type="text"
+                  onChange={(e) => setAwnser3(e.target.value)}
+                />
+              </div>
+              <div>
+                <p className=" font-semibold">Awnser 4</p>
+                <input
+                  placeholder="Enter Awnser-5 Text"
+                  className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+                  type="text"
+                  onChange={(e) => setAwnser4(e.target.value)}
+                />
+              </div>
+              <div>
+                <p className=" font-semibold">Correct Awnser</p>
+                <input
+                  placeholder="Enter Awnser-5 Text"
+                  className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+                  type="text"
+                  onChange={(e) => setCorrectAwn(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-row ml-36 mt-12">
+            <div>
+              <button
+                onClick={() => addQuestion()}
+                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+              >
+                <div className="flex items-center">
+                  <SaveIcon className="me-2" />
+                  <span>Save</span>
+                </div>
+              </button>
+            </div>
+            <div>
+              <button className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                <div className="flex items-center">
+                  <Undo className="me-2" />
+                  <span>Reset</span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default UploadQuestions;

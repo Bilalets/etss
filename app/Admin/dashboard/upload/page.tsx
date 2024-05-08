@@ -1,8 +1,8 @@
 import React from 'react'
-import Uploadques from './uploadquestions';
+import UploadQuestions from './uploadquestions';
 const Uploadquestions = () => {
   return (
-    <div><Uploadques/></div>
+    <div><UploadQuestions/></div>
   )
 }
 

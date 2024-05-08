@@ -58,3 +58,84 @@ model subProducts {
   isAvailable Boolean
   questions   Question[]
 }
+
+model Service {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  category  Category[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Category {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  Service     Service?      @relation(fields: [serviceId], references: [id],onDelete: Cascade)
+  serviceId   String?       @db.ObjectId
+  subcategory Subcategory[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Subcategory {
+  id                 String                 @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  subcatquestionbank SubcategoryQuestions[]
+  subject            Subjects[]
+  Category           Category?              @relation(fields: [categoryId], references: [id],onDelete: Cascade )
+  categoryId         String?                @db.ObjectId
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+}
+
+model Subjects {
+  id              String             @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  subquestionbank SubjectQuestions[]
+  chapters        Chapters[]
+  Subcategory     Subcategory?       @relation(fields: [subcategoryId], references: [id],onDelete: Cascade)
+  subcategoryId   String?            @db.ObjectId
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+model Chapters {
+  id                   String              @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String
+  chaptersquestionbank ChaptersQuestions[]
+  Subjects             Subjects?           @relation(fields: [subjectsId], references: [id],onDelete: Cascade)
+  subjectsId           String?             @db.ObjectId
+}
+
+model SubcategoryQuestions {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  questionName  String
+  awnsers       String[]
+  correctAwnser String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  Subcategory   Subcategory? @relation(fields: [subcategoryId], references: [id],onDelete: Cascade)
+  subcategoryId String?      @db.ObjectId
+}
+
+model SubjectQuestions {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  questionName  String
+  awnsers       String[]
+  correctAwnser String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  Subjects      Subjects? @relation(fields: [subjectsId], references: [id],onDelete: Cascade)
+  subjectsId    String?   @db.ObjectId
+}
+
+model ChaptersQuestions {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  questionName  String
+  awnsers       String[]
+  correctAwnser String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  Chapters      Chapters? @relation(fields: [chaptersId], references: [id],onDelete: Cascade)
+  chaptersId    String?   @db.ObjectId
+}

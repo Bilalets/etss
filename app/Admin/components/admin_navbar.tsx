@@ -56,6 +56,7 @@ const admin_navbar = () => {
             },
           }}
         >
+          
           <Menu className="mt-10 text-gray-600 h-full">
             <MenuItem
               icon={<LayoutDashboardIcon />}
@@ -74,62 +75,19 @@ const admin_navbar = () => {
             </MenuItem>
             
           
-            
-            <hr />
-            <MenuItem
-                icon={<SquareGanttIcon />}
-                component={<Link href="/Admin/dashboard/subproducts/create-subproduct" />}
-              >
-               Category
-              </MenuItem>
-        
-          <hr />
-            
-            <MenuItem
-              icon={<GanttChart />}
-              component={<Link href="/Admin/dashboard/category/create-subcategory" />}
-            >
-              SubCategory
-            </MenuItem>
-            <hr />
-            
-            <MenuItem
-              icon={<NotebookText />}
-              component={<Link href="/Admin/dashboard/subcategory/create-subject" />}
-            >
-               Subject
-            </MenuItem>
-            
-            <hr />
-          
-         
-            <MenuItem
-              icon={<PencilRuler />}
-              component={<Link href="/Admin/dashboard/pattern/create-pattern" />}
-            >
-              Chapters
-            </MenuItem>
+      
             <hr />
 
-            <SubMenu icon={<Upload/>} label='QB/Upload'>
-           
+            
 
 
             <MenuItem
-              icon={<NotebookText/>}
+              icon={<Upload/>}
               component={<Link href="/Admin/dashboard/upload" />}
             >
-              Create Subject
+              Question Bank
             </MenuItem>
-            <MenuItem
-              icon={<Pencil />}
-              component={<Link href="/Admin/dashboard/upload/editupload" />}
-            >
-              Edit Subject
-            </MenuItem>
-            <hr />
-            </SubMenu>
-
+          
 
             <hr />
             <SubMenu  icon={<BookOpenCheck />} label='Assessment'>
