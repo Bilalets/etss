@@ -67,6 +67,8 @@ const UploadQuestions = () => {
   const [awnser2, setAwnser2] = useState<string>();
   const [awnser3, setAwnser3] = useState<string>();
   const [awnser4, setAwnser4] = useState<string>();
+  const [selectedservice, Setselectedservice] = useState<Test>();
+  const [selectedcattegory, Setselectedcategory] = useState<Category>();
   const [selectedSubcategory, setSelectedSubcategory] = useState<Subcategory>();
   const [selectedSubject, setSelectedSubject] = useState<Subject>();
   const handleSubcategoryClick = (item: Subcategory) => {
@@ -76,10 +78,14 @@ const UploadQuestions = () => {
     setSelectedSubject(item);
   };
 
+  const handlecategoryclick = (item: Category) => {
+    Setselectedcategory(item);
+  };
+
   const fetchData = async () => {
     try {
       const response = await axios.get("/api/Allservices/");
-
+      console.log(response)
       const data = response.data;
       setdata(data);
     } catch (error) {
@@ -89,22 +95,18 @@ const UploadQuestions = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  
   const [set, seed] = useState<Subcategory[]>([]);
   const [translateValue, setTranslateValue] = useState(0);
-  const itemWidth = 40;
+  const itemWidth = 60;
   //
   const containerWidth = itemWidth * set.length;
   useEffect(() => {
-    const subcategories: Subcategory[] = [];
-    getdata.forEach((service: Test) => {
-      service.category.forEach((category: Category) => {
-        category.subcategory.forEach((subcategory: Subcategory) => {
-          subcategories.push(subcategory);
-        });
-      });
-    });
-    seed(subcategories);
-  }, [getdata, seed]);
+    if (selectedcattegory) {
+      const subcategories = selectedcattegory.subcategory;
+      seed(subcategories);
+    }
+  }, [selectedcattegory, seed]);
   const handleMoveRight = () => {
     const firstItem = set[0];
     const newSet = set.slice(1).concat(firstItem);
@@ -133,20 +135,20 @@ const UploadQuestions = () => {
     }
   };
 
-  let displayService = getdata.map((item) => (
-    <option key={item.id} value={item.id}>
+  let displaycategory = selectedservice?.category.map((item) => (
+    <div
+      onClick={() => handlecategoryclick(item)}
+      className="flex flex-row gap-5"
+      key={item.id}
+    >
       {item.name}
-    </option>
+    </div>
   ));
-
-  let displaycategory = getdata.map((service) => {
-    let categoryElements = service.category.map((category) => (
-      <div key={category.id} className="flex flex-row">{category.name}</div>
-    ));
-
-    return <div key={service.id} className="flex flex-row gap-5 overflow-hidden cursor-pointer">{categoryElements}</div>;
-  });
-
+  const handleservicechange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedserviceId = event.target.value;
+    const selservice = getdata?.find((ser) => ser.name === selectedserviceId);
+    Setselectedservice(selservice);
+  };
 
   const handleChapterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedChapterId = event.target.value;
@@ -157,11 +159,11 @@ const UploadQuestions = () => {
     setchapid(selectedChapter);
   };
   const clearInputs = () => {
-    setQuestion('');
-    setCorrectAwn('');
-    setAwnser1('');
-    setAwnser2('');
-    setAwnser3('');
+    setQuestion("");
+    setCorrectAwn("");
+    setAwnser1("");
+    setAwnser2("");
+    setAwnser3("");
     setAwnser4("");
     setSelectedSubcategory(undefined);
     setSelectedSubject(undefined);
@@ -179,27 +181,25 @@ const UploadQuestions = () => {
         // Subcategory selected
         requestData.subcategoryId = selectedSubcategory.id;
         await axios.post("/api/Service/subcatquestions", requestData);
-        
       } else if (selectedSubject && !getchapid) {
         // Subject selected
         requestData.subjectsId = selectedSubject.id;
         await axios.post("/api/Service/Subjectquestions", requestData);
-       
       } else if (getchapid) {
         // Chapter selected
         requestData.chaptersId = getchapid.id;
         await axios.post("/api/Service/Chapterquestions", requestData);
-        
       } else {
         console.error("Please select a valid subcategory, subject, or chapter");
       }
       toast.success("Question saved successfully!");
-      clearInputs()
+      clearInputs();
     } catch (error) {
       console.error("Error saving question:", error);
       toast.error("Failed to save question.");
     }
   };
+
   return (
     <>
       <div className="flex flex-row items-center  ml-[690px] mb-10 gap-5">
@@ -208,12 +208,13 @@ const UploadQuestions = () => {
         </div>
         <div className=" flex ml-48">
           <select
-            id="countries"
+            onChange={handleservicechange}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
-            <option selected>Select Service</option>
-
-            {displayService}
+            <option>Select Service</option>
+            {getdata.map((item) => (
+              <option key={item.id}>{item.name}</option>
+            ))}
           </select>
         </div>
       </div>
@@ -222,7 +223,9 @@ const UploadQuestions = () => {
           <div className=" mt-1 ml-[-160px] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-3xl text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
             Categories
           </div>
-          <div className="flex flex-row overflow-hidden w-[250px] gap-5">{displaycategory}</div>
+          <div className="flex flex-row overflow-hidden w-[250px] gap-5">
+            {displaycategory}
+          </div>
         </div>
         <div className="flex flex-row bg-white items-center shadow rounded-md   h-16 w-[600px] ml-[390px]">
           <div className=" ml-3">
@@ -239,15 +242,14 @@ const UploadQuestions = () => {
               }}
             >
               {set.map((item) => (
-          <div
-            key={item.id}
-            className="cursor-pointer"
-           
-            onClick={() => handleSubcategoryClick(item)}
-          >
-            {item.name}
-          </div>
-        ))}
+                <div
+                  key={item.id}
+                  className="cursor-pointer w-[500px]"
+                  onClick={() => handleSubcategoryClick(item)}
+                >
+                  {item.name}
+                </div>
+              ))}
             </div>
           </div>
 
