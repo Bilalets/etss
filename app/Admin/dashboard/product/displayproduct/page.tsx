@@ -57,10 +57,15 @@ const DisplayProduct = () => {
   const [getdata, setdata] = useState<Test[]>([]);
   const fetchData = async () => {
     try {
-      const response = await axios.get("/api/Allservices/");
-
-      const data = response.data;
-      setdata(data);
+      const response = await axios.get("/api/Allservices/", {
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
+        },
+      });
+      if (response.status === 200) {
+        const data = response.data;
+        setdata(data);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -72,24 +77,24 @@ const DisplayProduct = () => {
   const addservc = async () => {
     const servicename = prompt("Enter Service Name");
 
-    // Check if the service name is non-empty and valid
     if (servicename && servicename.trim() !== "") {
       try {
-        // Make the POST request to add the service
-        await axios.post("/api/Service/", { name: servicename });
+        const headers = {
+          "Content-Type": "application/json",  
+          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",  
+      
+        };
+  
+        await axios.post("/api/Service/", { name: servicename },{headers});
 
-        // Notify the user of success
         toast.success("Service added successfully!");
 
-        // Refresh data to update the UI
-        fetchData();
+      await  fetchData();
       } catch (error) {
-        // Log and handle errors
         console.error("Error adding service:", error);
         toast.error("Error adding service");
       }
     } else {
-      // Notify the user if the service name is empty
       toast.error("Service name cannot be empty");
     }
   };
@@ -97,27 +102,26 @@ const DisplayProduct = () => {
   const addcate = async (SerID: string) => {
     const catname = prompt("Enter Category Name");
 
-    // Check if the category name is non-empty and valid
     if (catname && catname.trim() !== "") {
       try {
-        // Make the POST request to add the category
+        const headers = {
+          "Content-Type": "application/json", 
+          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0", 
+        
+        };
         await axios.post("/api/Service/Category", {
           name: catname,
           serviceId: SerID,
-        });
+        },{headers});
 
-        // Notify the user of success
         toast.success("Category added successfully!");
 
-        // Refresh data to update the UI
-        fetchData();
+        await  fetchData();
       } catch (error) {
-        // Log and handle errors
         console.error("Error adding category:", error);
         toast.error("Error adding category");
       }
     } else {
-      // Notify the user if the category name is empty
       toast.error("Category name cannot be empty");
     }
   };
@@ -126,13 +130,18 @@ const DisplayProduct = () => {
     const subcatname = prompt("Enter Subcategory Name");
     if (subcatname) {
       try {
-        console.log("Attempting to add subcategory:", subcatname);
+        const headers = {
+          "Content-Type": "application/json",  
+          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",  
+      
+        };
+  
         await axios.post("/api/Service/Subcategory", {
           name: subcatname,
           categoryId: catID,
-        });
-        console.log("Subcategory added successfully");
-        fetchData(); // Refresh data
+        },{headers});
+    
+        await   fetchData();
         toast.success("Subcategory added successfully!");
       } catch (error) {
         console.error("Error adding subcategory:", error);
@@ -144,14 +153,18 @@ const DisplayProduct = () => {
     const subname = prompt("Enter Subject Name");
     if (subname) {
       try {
+        const headers = {
+          "Content-Type": "application/json",  
+          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",  
+      
+        };
         await axios.post("/api/Service/Sub", {
           name: subname,
           subcategoryId: subcatID,
-        });
+        },{headers});
         toast.success("Subject added successfully!");
 
-        // Refresh data to update the UI
-        fetchData();
+        await    fetchData();
       } catch (error) {
         console.error("Error adding subject:", error);
         toast.error("Error adding subject");
@@ -161,51 +174,46 @@ const DisplayProduct = () => {
 
   const addchaps = async (subID: string) => {
     const chapname = prompt("Enter Chapter Name");
-
-    // Check if the chapter name is non-empty
     if (chapname && chapname.trim() !== "") {
       try {
-        // Make the POST request to add the chapter
+        const headers = {
+          "Content-Type": "application/json",  
+          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",  
+      
+        };
         await axios.post("/api/Service/Chapters", {
           name: chapname,
           subjectsId: subID,
-        });
+        },{headers});
 
-        // Notify the user of success
         toast.success("Chapter added successfully!");
 
-        // Refresh data to update the UI
-        fetchData();
+        await  fetchData();
       } catch (error) {
-        // Log and handle errors
         console.error("Error adding chapter:", error);
         toast.error("Error adding chapter");
       }
     } else {
-      // Notify the user if the chapter name is empty
       toast.error("Chapter name cannot be empty");
     }
   };
   const deleteservicee = async (SerID: string) => {
-    // Ask for user confirmation before deleting
     const confirmation = window.confirm(
       "Are you sure you want to delete this service? This action cannot be undone."
     );
 
     if (confirmation) {
+   
       try {
-        // Make the DELETE request to delete the service
+
         await axios.delete("/api/Service/delservice", {
           data: { id: SerID },
         });
 
-        // Notify the user of success
         toast.success("Service deleted successfully!");
 
-        // Refresh data to update the UI
-        fetchData();
+        await    fetchData();
       } catch (error) {
-        // Log and handle errors
         console.error("Error deleting service:", error);
         toast.error("Error deleting service");
       }
@@ -213,25 +221,21 @@ const DisplayProduct = () => {
   };
 
   const deletecat = async (SerID: string) => {
-    // Ask for user confirmation before deleting
     const confirmation = window.confirm(
       "Are you sure you want to delete this category? This action cannot be undone."
     );
 
     if (confirmation) {
       try {
-        // Make the DELETE request to delete the category
+    
         await axios.delete("/api/Service/delcategory", {
           data: { id: SerID },
         });
 
-        // Notify the user of success
         toast.success("Category deleted successfully!");
 
-        // Refresh data to update the UI
-        fetchData();
+        await    fetchData();
       } catch (error) {
-        // Log and handle errors
         console.error("Error deleting category:", error);
         toast.error("Error deleting category");
       }
@@ -239,25 +243,20 @@ const DisplayProduct = () => {
   };
 
   const deletesubcat = async (SerID: string) => {
-    // Ask for user confirmation before deleting
     const confirmation = window.confirm(
       "Are you sure you want to delete this subcategory? This action cannot be undone."
     );
 
     if (confirmation) {
       try {
-        // Make the DELETE request to delete the subcategory
         await axios.delete("/api/Service/delsubcategory", {
           data: { id: SerID },
         });
 
-        // Notify the user of success
         toast.success("Subcategory deleted successfully!");
 
-        // Refresh data to update the UI
-        fetchData();
+        await    fetchData();
       } catch (error) {
-        // Log and handle errors
         console.error("Error deleting subcategory:", error);
         toast.error("Error deleting subcategory");
       }
@@ -265,25 +264,20 @@ const DisplayProduct = () => {
   };
 
   const deletesab = async (SerID: string) => {
-    // Ask for user confirmation before deleting
     const confirmation = window.confirm(
       "Are you sure you want to delete this subject? This action cannot be undone."
     );
 
     if (confirmation) {
       try {
-        // Make the DELETE request to delete the subject
         await axios.delete("/api/Service/deletesub", {
           data: { id: SerID },
         });
 
-        // Notify the user of success
         toast.success("Subject deleted successfully!");
 
-        // Refresh data to update the UI
-        fetchData();
+        await      fetchData();
       } catch (error) {
-        // Log and handle errors
         console.error("Error deleting subject:", error);
         toast.error("Error deleting subject");
       }
@@ -291,25 +285,20 @@ const DisplayProduct = () => {
   };
 
   const deletechap = async (SerID: string) => {
-    // Ask for user confirmation before deleting the chapter
     const confirmation = window.confirm(
       "Are you sure you want to delete this chapter? This action cannot be undone."
     );
 
     if (confirmation) {
       try {
-        // Make the DELETE request to delete the chapter
         await axios.delete("/api/Service/deletechapters", {
           data: { id: SerID },
         });
 
-        // Notify the user of success
         toast.success("Chapter deleted successfully!");
 
-        // Refresh data to update the UI
-        fetchData();
+        await  fetchData();
       } catch (error) {
-        // Log and handle errors
         console.error("Error deleting chapter:", error);
         toast.error("Error deleting chapter");
       }
@@ -324,7 +313,7 @@ const DisplayProduct = () => {
           id: SerID,
         });
         toast.success("Service Name Updated Successfully");
-        fetchData();
+        await    fetchData();
       } catch (error) {
         toast.error("Error Updating Service Name");
         console.log(error);
@@ -341,7 +330,7 @@ const DisplayProduct = () => {
         });
 
         toast.success("Category Name Updated Sucessfully");
-        fetchData();
+        await    fetchData();
       } catch (error) {
         toast.error("Error Updating Category Name");
       }
@@ -356,7 +345,7 @@ const DisplayProduct = () => {
         id: SerID,
       });
       toast.success("Subcategory Name Updated Successfully");
-      fetchData();
+      await   fetchData();
     } catch (error) {
       toast.error("Error Updating Subcategory Name");
       console.log(error);
@@ -371,7 +360,7 @@ const DisplayProduct = () => {
           id: SerID,
         });
         toast.success("Subject Name Updated Successfully");
-        fetchData();
+        await    fetchData();
       } catch (error) {
         toast.error("Error Updating Subject Name");
         console.error("Error updating chapter:", error);
@@ -388,7 +377,7 @@ const DisplayProduct = () => {
         });
 
         toast.success("Chapter Name updated successfully!");
-        fetchData();
+        await    fetchData();
       } catch (error) {
         toast.error("Error updating chapter Name");
         console.error("Error updating chapter:", error);
@@ -404,12 +393,9 @@ const DisplayProduct = () => {
   };
 
   const cattoggleDropdown = (index: number) => {
-    // Check if the current index is already open
     if (catopenDropdownIndex === index) {
-      // If yes, close the dropdown by setting the state to null
       setcatOpenDropdownIndex(null);
     } else {
-      // Otherwise, open the dropdown for the current index
       setcatOpenDropdownIndex(index);
     }
   };
@@ -423,17 +409,12 @@ const DisplayProduct = () => {
   };
 
   const sabtoggleDropdown = (index: number) => {
-    // Check if the current index is already open
     if (sabopenDropdownIndex === index) {
-      // If yes, close the dropdown by setting the state to null
       setsabOpenDropdownIndex(null);
     } else {
-      // Otherwise, open the dropdown for the current index
       setsabOpenDropdownIndex(index);
     }
   };
-
-
 
   return (
     <>
