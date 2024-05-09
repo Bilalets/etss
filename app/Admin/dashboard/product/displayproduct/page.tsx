@@ -86,7 +86,6 @@ const DisplayProduct = () => {
 
         toast.success("Service added successfully!");
 
-      await  fetchData();
       } catch (error) {
         console.error("Error adding service:", error);
         toast.error("Error adding service");
@@ -101,15 +100,11 @@ const DisplayProduct = () => {
 
     if (catname && catname.trim() !== "") {
       try {
-        const headers = {
-          "Content-Type": "application/json", 
-          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0", 
-        
-        };
+      
         await axios.post("/api/Service/Category", {
           name: catname,
           serviceId: SerID,
-        },{headers});
+        });
 
         toast.success("Category added successfully!");
 
