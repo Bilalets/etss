@@ -1,5 +1,9 @@
 "use client";
 import axios from "axios";
+axios.interceptors.request.use((config) => {
+  config.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0';
+  return config;
+});
 import {
   ArrowDown,
   ArrowUp,
@@ -55,13 +59,10 @@ const DisplayProduct = () => {
     number | null
   >(null);
   const [getdata, setdata] = useState<Test[]>([]);
+
   const fetchData = async () => {
     try {
-      const response = await axios.get("/api/Allservices/", {
-        headers: {
-          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
-        },
-      });
+      const response = await axios.get("/api/Allservices/");
       if (response.status === 200) {
         const data = response.data;
         setdata(data);
@@ -79,13 +80,9 @@ const DisplayProduct = () => {
 
     if (servicename && servicename.trim() !== "") {
       try {
-        const headers = {
-          "Content-Type": "application/json",  
-          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",  
-      
-        };
+        
   
-        await axios.post("/api/Service/", { name: servicename },{headers});
+        await axios.post("/api/Service/", { name: servicename });
 
         toast.success("Service added successfully!");
 
@@ -153,15 +150,11 @@ const DisplayProduct = () => {
     const subname = prompt("Enter Subject Name");
     if (subname) {
       try {
-        const headers = {
-          "Content-Type": "application/json",  
-          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",  
-      
-        };
+       
         await axios.post("/api/Service/Sub", {
           name: subname,
           subcategoryId: subcatID,
-        },{headers});
+        });
         toast.success("Subject added successfully!");
 
         await    fetchData();
@@ -176,15 +169,11 @@ const DisplayProduct = () => {
     const chapname = prompt("Enter Chapter Name");
     if (chapname && chapname.trim() !== "") {
       try {
-        const headers = {
-          "Content-Type": "application/json",  
-          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",  
       
-        };
         await axios.post("/api/Service/Chapters", {
           name: chapname,
           subjectsId: subID,
-        },{headers});
+        });
 
         toast.success("Chapter added successfully!");
 
@@ -212,7 +201,7 @@ const DisplayProduct = () => {
 
         toast.success("Service deleted successfully!");
 
-        await    fetchData();
+        await  fetchData();
       } catch (error) {
         console.error("Error deleting service:", error);
         toast.error("Error deleting service");
