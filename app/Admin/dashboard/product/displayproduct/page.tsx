@@ -1,7 +1,8 @@
 "use client";
 import axios from "axios";
 axios.interceptors.request.use((config) => {
-  config.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0';
+  config.headers["Cache-Control"] =
+    "no-cache, no-store, must-revalidate, max-age=0";
   return config;
 });
 import {
@@ -62,7 +63,14 @@ const DisplayProduct = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/api/Allservices/");
+      const response = await axios.get("/api/Allservices/", {
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+        params: {
+          timestamp: new Date().getTime(),
+        },
+      });
       if (response.status === 200) {
         const data = response.data;
         setdata(data);
@@ -77,15 +85,13 @@ const DisplayProduct = () => {
 
   const addservc = async () => {
     const servicename = prompt("Enter Service Name");
-
+console.log(servicename)
     if (servicename && servicename.trim() !== "") {
       try {
-        
-  
         await axios.post("/api/Service/", { name: servicename });
 
         toast.success("Service added successfully!");
-
+        await fetchData();
       } catch (error) {
         console.error("Error adding service:", error);
         toast.error("Error adding service");
@@ -100,7 +106,6 @@ const DisplayProduct = () => {
 
     if (catname && catname.trim() !== "") {
       try {
-      
         await axios.post("/api/Service/Category", {
           name: catname,
           serviceId: SerID,
@@ -108,7 +113,7 @@ const DisplayProduct = () => {
 
         toast.success("Category added successfully!");
 
-        await  fetchData();
+        await fetchData();
       } catch (error) {
         console.error("Error adding category:", error);
         toast.error("Error adding category");
@@ -123,17 +128,20 @@ const DisplayProduct = () => {
     if (subcatname) {
       try {
         const headers = {
-          "Content-Type": "application/json",  
-          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",  
-      
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
         };
-  
-        await axios.post("/api/Service/Subcategory", {
-          name: subcatname,
-          categoryId: catID,
-        },{headers});
-    
-        await   fetchData();
+
+        await axios.post(
+          "/api/Service/Subcategory",
+          {
+            name: subcatname,
+            categoryId: catID,
+          },
+          { headers }
+        );
+
+        await fetchData();
         toast.success("Subcategory added successfully!");
       } catch (error) {
         console.error("Error adding subcategory:", error);
@@ -145,14 +153,13 @@ const DisplayProduct = () => {
     const subname = prompt("Enter Subject Name");
     if (subname) {
       try {
-       
         await axios.post("/api/Service/Sub", {
           name: subname,
           subcategoryId: subcatID,
         });
         toast.success("Subject added successfully!");
 
-        await    fetchData();
+        await fetchData();
       } catch (error) {
         console.error("Error adding subject:", error);
         toast.error("Error adding subject");
@@ -164,7 +171,6 @@ const DisplayProduct = () => {
     const chapname = prompt("Enter Chapter Name");
     if (chapname && chapname.trim() !== "") {
       try {
-      
         await axios.post("/api/Service/Chapters", {
           name: chapname,
           subjectsId: subID,
@@ -172,7 +178,7 @@ const DisplayProduct = () => {
 
         toast.success("Chapter added successfully!");
 
-        await  fetchData();
+        await fetchData();
       } catch (error) {
         console.error("Error adding chapter:", error);
         toast.error("Error adding chapter");
@@ -187,16 +193,14 @@ const DisplayProduct = () => {
     );
 
     if (confirmation) {
-   
       try {
-
         await axios.delete("/api/Service/delservice", {
           data: { id: SerID },
         });
 
         toast.success("Service deleted successfully!");
 
-        await  fetchData();
+        await fetchData();
       } catch (error) {
         console.error("Error deleting service:", error);
         toast.error("Error deleting service");
@@ -211,14 +215,13 @@ const DisplayProduct = () => {
 
     if (confirmation) {
       try {
-    
         await axios.delete("/api/Service/delcategory", {
           data: { id: SerID },
         });
 
         toast.success("Category deleted successfully!");
 
-        await    fetchData();
+        await fetchData();
       } catch (error) {
         console.error("Error deleting category:", error);
         toast.error("Error deleting category");
@@ -239,7 +242,7 @@ const DisplayProduct = () => {
 
         toast.success("Subcategory deleted successfully!");
 
-        await    fetchData();
+        await fetchData();
       } catch (error) {
         console.error("Error deleting subcategory:", error);
         toast.error("Error deleting subcategory");
@@ -260,7 +263,7 @@ const DisplayProduct = () => {
 
         toast.success("Subject deleted successfully!");
 
-        await      fetchData();
+        await fetchData();
       } catch (error) {
         console.error("Error deleting subject:", error);
         toast.error("Error deleting subject");
@@ -281,7 +284,7 @@ const DisplayProduct = () => {
 
         toast.success("Chapter deleted successfully!");
 
-        await  fetchData();
+        await fetchData();
       } catch (error) {
         console.error("Error deleting chapter:", error);
         toast.error("Error deleting chapter");
@@ -297,7 +300,7 @@ const DisplayProduct = () => {
           id: SerID,
         });
         toast.success("Service Name Updated Successfully");
-        await    fetchData();
+        await fetchData();
       } catch (error) {
         toast.error("Error Updating Service Name");
         console.log(error);
@@ -314,7 +317,7 @@ const DisplayProduct = () => {
         });
 
         toast.success("Category Name Updated Sucessfully");
-        await    fetchData();
+        await fetchData();
       } catch (error) {
         toast.error("Error Updating Category Name");
       }
@@ -329,7 +332,7 @@ const DisplayProduct = () => {
         id: SerID,
       });
       toast.success("Subcategory Name Updated Successfully");
-      await   fetchData();
+      await fetchData();
     } catch (error) {
       toast.error("Error Updating Subcategory Name");
       console.log(error);
@@ -344,7 +347,7 @@ const DisplayProduct = () => {
           id: SerID,
         });
         toast.success("Subject Name Updated Successfully");
-        await    fetchData();
+        await fetchData();
       } catch (error) {
         toast.error("Error Updating Subject Name");
         console.error("Error updating chapter:", error);
@@ -361,7 +364,7 @@ const DisplayProduct = () => {
         });
 
         toast.success("Chapter Name updated successfully!");
-        await    fetchData();
+        await fetchData();
       } catch (error) {
         toast.error("Error updating chapter Name");
         console.error("Error updating chapter:", error);
