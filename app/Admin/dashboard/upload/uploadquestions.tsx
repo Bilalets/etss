@@ -71,11 +71,15 @@ const UploadQuestions = () => {
   const [selectedcattegory, Setselectedcategory] = useState<Category>();
   const [selectedSubcategory, setSelectedSubcategory] = useState<Subcategory>();
   const [selectedSubject, setSelectedSubject] = useState<Subject>();
+  const [clickedSubjectId, setClickedSubjectId] = useState<Subject >();
   const handleSubcategoryClick = (item: Subcategory) => {
     setSelectedSubcategory(item);
   };
   const handlesubjectClick = (item: Subject) => {
     setSelectedSubject(item);
+    setClickedSubjectId(item)
+     
+    
   };
 
   const handlecategoryclick = (item: Category) => {
@@ -159,15 +163,15 @@ const UploadQuestions = () => {
     setchapid(selectedChapter);
   };
   const clearInputs = () => {
+   
     setQuestion("");
     setCorrectAwn("");
     setAwnser1("");
     setAwnser2("");
     setAwnser3("");
     setAwnser4("");
-    setSelectedSubcategory(undefined);
-    setSelectedSubject(undefined);
-    setchapid(undefined);
+    
+    
   };
   const addQuestion = async () => {
     try {
@@ -192,8 +196,9 @@ const UploadQuestions = () => {
       } else {
         console.error("Please select a valid subcategory, subject, or chapter");
       }
-      toast.success("Question saved successfully!");
       clearInputs();
+      toast.success("Question saved successfully!");
+      
     } catch (error) {
       console.error("Error saving question:", error);
       toast.error("Failed to save question.");
@@ -283,7 +288,11 @@ const UploadQuestions = () => {
               <hr />
               {selectedSubcategory?.subject.map((subject) => (
                 <div key={subject.id}>
-                  <div onClick={() => handlesubjectClick(subject)}>
+                  <div    style={{
+        backgroundColor: clickedSubjectId?.id === subject.id ? "Black" : "white",
+        color:clickedSubjectId?.id === subject.id ? "white" : "Black",
+        cursor: "pointer",
+    }} onClick={() => handlesubjectClick(subject)}>
                     <hr />
                     <MenuItem> {subject.name}</MenuItem>
                   </div>
@@ -317,6 +326,7 @@ const UploadQuestions = () => {
               <div>
                 <p className=" font-semibold">Question</p>
                 <input
+                value={question}
                   placeholder="Enter Awnser-5 Text"
                   className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
@@ -326,6 +336,7 @@ const UploadQuestions = () => {
               <div>
                 <p className=" font-semibold">Awnser 1</p>
                 <input
+                value={awnser1}
                   placeholder="Enter Awnser-5 Text"
                   className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
@@ -335,6 +346,7 @@ const UploadQuestions = () => {
               <div>
                 <p className=" font-semibold">Awnser 2</p>
                 <input
+                value={awnser2}
                   placeholder="Enter Awnser-5 Text"
                   className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
@@ -347,6 +359,7 @@ const UploadQuestions = () => {
               <div>
                 <p className=" font-semibold">Awnser 3</p>
                 <input
+                   value={awnser3}
                   placeholder="Enter Awnser-5 Text"
                   className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
@@ -356,6 +369,7 @@ const UploadQuestions = () => {
               <div>
                 <p className=" font-semibold">Awnser 4</p>
                 <input
+                   value={awnser4}
                   placeholder="Enter Awnser-5 Text"
                   className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
@@ -365,6 +379,7 @@ const UploadQuestions = () => {
               <div>
                 <p className=" font-semibold">Correct Awnser</p>
                 <input
+                value={correctAwn}
                   placeholder="Enter Awnser-5 Text"
                   className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
