@@ -32,7 +32,12 @@ const LoginScreen: React.FC = () => {
             router.replace('/Admin/dashboard/upload');
         } 
     }
-
+if(session?.user?.email==='romanets@gmail.com'){
+  router.replace('/Assistant/Dashboard');
+}
+if(session?.user?.email==='farazets@gmail.com'){
+  router.replace('/Assistant/Dashboard');
+}
     if (session?.user?.email) {
         
       if (session.user.email === 'applicant123@gmail.com') {
