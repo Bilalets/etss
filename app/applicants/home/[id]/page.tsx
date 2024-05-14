@@ -1,118 +1,118 @@
-import React, { useState } from 'react';
-import Image from 'next/image';
+'use client'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Link from 'next/link';
+import { MenuItem, Menu } from "react-pro-sidebar";
 
-// Define the type for subjects
-type Subject = {
-    id: number;
-    subject: string;
-    image: string;
-    status: string;
-    option: string[];
- 
-};
-
-
-const subjects: Subject[] = [
-    {
-        id: 1,
-        subject: 'CSS',
-        image: '/images/maths.png',
-        status: 'Available',
-        option: ['MPT'],
-       
-    },
-    {
-        id: 2,
-        subject: 'IELTS',
-        image: '/images/ielts.png',
-        status: 'Available',
-        option: ['Writing', 'Listening', 'Speaking', 'Reading'],
-        
-    },
-    {
-        id: 3,
-        subject: "General Test",
-        image: "/images/general.png",
-        status: "Available",
-        option:["Quantitative reasoning"," Verbal reasoning", " Analytical reasoning"]
-      },
-      {
-        id: 4,
-        subject: "FIA",
-        image: "/images/maths.png",
-        status: "Available",
-        option:["LDC","UDC","Assistant Director","Sub Inspector"]
-      },
-      {
-        id: 5,
-        subject: "ISSB",
-        image: "/images/ielts.png",
-        status: "Available",
-        option:["Verbal","Non-Verbal","Academic"]
-      },
-      {
-        id: 6,
-        subject: "PMS",
-        image: "/images/general.png",
-        status: "Available",
-        option:["Complusory","Optional"]
-      },
-];
-
-
-export async function generateStaticParams() {
-    return subjects.map((subject) => ({
-        id: subject.id.toString(),
-    }));
+interface Chapter {
+  id: string;
+  name: string;
 }
 
+interface Subject {
+  id: string;
+  name: string;
+  chapters?: Chapter[]; // Making chapters optional in Subject interface
+}
 
-const Singleproduct = async ({ params }: { params: { id: string } }) => {
+interface Subcategory {
+  id: string;
+  name: string;
+  subject: Subject[];
+}
 
-    const subject = subjects.find((sub) => sub.id.toString() === params.id);
+interface Category {
+  id: string;
+  name: string;
+  subcategory: Subcategory[];
+}
 
-   
-    if (subject) {
-        return (
-            <>
-            <div className="flex mt-10 ml-[340px] flex-row w-[800px] h-36 gap-10 border justify-center items-center bg-slate-50">
-               
-                <div><Image src={subject.image} alt={subject.subject} width={50} height={50} /></div>
-                <h1 className="text-3xl  mb-4">{subject.subject}</h1>
-                <p className="text-lg">Status: {subject.status}</p>
-                
-               
-            </div>
-            <div className=' flex flex-row ml-[300px]'>
-<div>
-{subject.option.map((opt, index) => (
-                <div className="flex m-10 flex-row w-[800px] h-16 gap-10 border justify-center items-center bg-slate-50" key={index}>
-                
-                <div className=' ml-[300px]'> {opt}</div>
-                <div >
-                    <Link href={`/applicants/assessment/1}`}>
-                <button className='text-white bg-[#050708]   hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 me-2 mb-2'>Start Assessment</button>
-                </Link>
+const Singleproduct = ({ params }: { params: { id: string } }) => {
+  const [getData, setData] = useState<Category[]>();
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/api/Service/Getsinglecat/${params.id}`);
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [params.id]);
+
+  const toggleDropdown = (id: string) => {
+    setSelectedSubjectId(id === selectedSubjectId ? null : id);
+  };
+
+  return (
+    <div>
+      {getData?.map((category) => (
+        <div className=' ml-[600px]' key={category.id}>
+          {category.subcategory.map((subcategoryItem) => (
+            <div key={subcategoryItem.id}>
+              <div
+                onClick={() => toggleDropdown(subcategoryItem.id)}
+                className="text-white m-10 h-20 w-[300px] bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex justify-center items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                {subcategoryItem.name}
+                <svg
+                  className="w-2.5 h-2.5 ms-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </div>
+              {selectedSubjectId === subcategoryItem.id && (
+                <div className="z-10 shadow-2xl h-full w-[300px] ml-10 bg-white divide-y divide-gray-100 rounded-lg dark:bg-gray-700">
+                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 items-center">
+                    {subcategoryItem.subject.map((item) => (
+                      <div className=" items-center" key={item.id}>
+                        <Menu>
+                          <hr />
+                          {item.chapters && item.chapters.length > 0 ? (
+                            // If subject has chapters, redirect to home
+                            <MenuItem >{item.name}</MenuItem>
+                          ) : (
+                            // If subject has no chapters, redirect to assessment component
+                            <MenuItem component={<Link href={`/applicants/assessment/${item.id}`} />}>{item.name}</MenuItem>
+                          )}
+                          <hr />
+                        </Menu>
+                        {/* Render chapters if they exist */}
+                        {item.chapters && item.chapters.length > 0 && item.chapters.map((chapter) => (
+                         
+                          <div key={chapter.id}  >
+                             <hr/>
+                            <Link href={`/applicants/home/Chapterquestion/${chapter.id}`}>
+                            {chapter.name}
+                            </Link>
+                            <hr/>
+                            </div>
+                        ))}
+                      </div>
+                    ))}
+                  </ul>
                 </div>
-                </div>
-            ))}
-        
-</div>
- 
-
+              )}
             </div>
-           
-            </>
-        );
-    }
-
-   
-    return (
-        <div className="p-4">
-            <p>Subject not found.</p>
+          ))}
         </div>
-    );
+      ))}
+    </div>
+  );
 };
 
 export default Singleproduct;

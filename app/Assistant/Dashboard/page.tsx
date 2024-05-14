@@ -317,7 +317,7 @@ const Questionbankhome = () => {
           </Sidebar>
         </div>
 
-        <div className=" bg-white shadow mt-8 h-[500px] w-[600px]  p-12 border-1">
+        <div className=" bg-white shadow mt-8 h-[500px] w-[700px]  p-12 border-1">
           <div className="w-[200px] ml-80 mb-10">
             <select
               id="countries"
@@ -341,7 +341,7 @@ const Questionbankhome = () => {
                 <input
                 value={question}
                   placeholder="Enter Awnser-5 Text"
-                  className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+                  className="bg-gray-100 w-80 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
                   onChange={(e) => setQuestion(e.target.value)}
                 />

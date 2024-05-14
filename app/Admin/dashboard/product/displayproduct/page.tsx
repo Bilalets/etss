@@ -63,14 +63,9 @@ const DisplayProduct = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/api/Allservices/", {
-        headers: {
-          "Cache-Control": "no-cache",
-        },
-        params: {
-          timestamp: new Date().getTime(),
-        },
-      });
+      const response = await axios.get("/api/Allservices/", 
+      
+      );
       if (response.status === 200) {
         const data = response.data;
         setdata(data);

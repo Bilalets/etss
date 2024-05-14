@@ -1,7 +1,15 @@
 import clsx from 'clsx';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from 'flowbite-react';
+import axios from 'axios';
 
+
+interface Questionbank {
+  id: string;
+  questionName: string;
+  correctAwnser: string;
+  awnsers: string[];
+}
 const quiz = {
   totalQuestions: 5,
   questions: [
@@ -38,9 +46,26 @@ const quiz = {
   ],
 };
 
-const TestStart = () => {
+const TestStart = ({ params }: { params: { id: string } }) => {
   let time = 30;
   let counter = 1;
+  const [getData,setData]=useState<Questionbank[]>([])
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/api/Service/Getsubjectquestions/${params.id}`);
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [params.id]);
+console.log(getData)
+
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
     null

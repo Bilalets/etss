@@ -45,7 +45,7 @@ interface Questionbank {
       },
     ],
   };
-const Quizstart = ({ params }: { params: { id: string } }) => {
+const Quizchapstart = ({ params }: { params: { id: string } }) => {
 
     const [getData,setData]=useState<Questionbank[]>([])
     let time = 30;
@@ -54,7 +54,7 @@ const Quizstart = ({ params }: { params: { id: string } }) => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`/api/Service/Getsubjectquestions/${params.id}`);
+          const response = await axios.get(`/api/Service/Getchapterquestions/${params.id}`);
           setData(response.data);
         } catch (error) {
           console.error('Error fetching data:', error);
@@ -204,4 +204,4 @@ const Quizstart = ({ params }: { params: { id: string } }) => {
   )
 }
 
-export default Quizstart;
+export default  Quizchapstart
