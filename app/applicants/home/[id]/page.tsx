@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import { MenuItem, Menu } from "react-pro-sidebar";
-
+import { Button } from 'flowbite-react';
+import { HiAdjustments, HiOutlineClock } from 'react-icons/hi';
 interface Chapter {
   id: string;
   name: string;
@@ -30,6 +31,7 @@ interface Category {
 const Singleproduct = ({ params }: { params: { id: string } }) => {
   const [getData, setData] = useState<Category[]>();
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
+
 
   useEffect(() => {
     const fetchData = async () => {

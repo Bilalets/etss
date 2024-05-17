@@ -40,24 +40,7 @@ model User {
   updatedAt     DateTime @updatedAt
 }
 
-model Question {
-  id            String      @id @default(auto()) @map("_id") @db.ObjectId
-  question      String
-  answers       String[]
-  correctAnswer String
-  subject       subProducts @relation(fields: [subproductId], references: [id], onDelete: Cascade)
-  subproductId  String      @db.ObjectId
-  level         Level
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-}
 
-model subProducts {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  isAvailable Boolean
-  questions   Question[]
-}
 
 model Service {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
