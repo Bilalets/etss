@@ -38,6 +38,9 @@ if(session?.user?.email==='romanets@gmail.com'){
 if(session?.user?.email==='farazets@gmail.com'){
   router.replace('/Assistant/Dashboard');
 }
+if(session?.user?.email==='aliets@ets.com'){
+  router.replace('/Assistant/Dashboard');
+}
     if (session?.user?.email) {
         
       if (session.user.email === 'applicant123@gmail.com') {
