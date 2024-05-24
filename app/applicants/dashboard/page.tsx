@@ -31,20 +31,20 @@ const Dashboard = () => {
   const [getnumber,setnumber]=useState<number[]>()
   const [passvaluess,setpassvalues]=useState<number[]>()
   const [worstval,setworstvalues]=useState<number[]>()
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await axios.post("/api/Getuserid",{email:session?.user?.email});
-      if (response.status === 200) {
-        setData(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!session?.user?.email) return; // Ensure session and email exist
 
-  fetchData();
-}, [session]);
+      try {
+        const response = await axios.post("/api/Getuserid", { email: session.user.email });
+        setData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [session]);
 
 useEffect(()=>{
   const fetchresult=async()=>{

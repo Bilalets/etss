@@ -77,8 +77,7 @@ const Piechart = () => {
 
   const averagePercentage = getcurrentRecord?.length ? totalPercentage / getcurrentRecord.length : 0;
 
-  // Format the average percentage to two decimal places for display
-  const formattedAveragePercentage = averagePercentage.toFixed(2);
+
 
 
   const options = {
