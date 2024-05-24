@@ -135,12 +135,14 @@ const Home = () => {
                   <div>
                     <b>Overview</b>
                   </div>
-
+                      <div>Field Of Expertise: Professor Zoman</div>
                   <div>
-                    <p>Islamic Studies, General Science</p>
+                    <p>Biology:34%,Chemistry:27%,Physics:27%</p>
+                    <p>English:9%,Logical Reasoning:3%</p>
                   </div>
+              
                   <div>
-                    <p>Total Questions: 100</p>
+                    <p>Total Questions: 200</p>
                   </div>
                 </div>
 
