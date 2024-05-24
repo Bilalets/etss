@@ -53,7 +53,7 @@ useEffect(()=>{
   }
   fetchresult()
 },[getData])
-console.log(getrecord)
+
   return (
     <>
       <div className=" flex flex-row w-[1200px] p-4 items-center ml-20 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">

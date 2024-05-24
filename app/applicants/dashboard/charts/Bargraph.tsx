@@ -64,7 +64,7 @@ const totalPercentage = getrecord?.reduce((total, item) => {
 }, 0) ?? 0;
 
 const averagePercentage = getrecord?.length ? totalPercentage / getrecord.length : 0;
-console.log(averagePercentage)
+
     const options = {
         tooltip: {
           // Configure tooltip

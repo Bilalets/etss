@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import axios from "axios";
@@ -57,13 +57,6 @@ useEffect(()=>{
   }
   fetchresult()
 },[getData])
-const getCurrentDate = (): string => {
-  const now = new Date();
-  return now.toISOString().split('T')[0];
-};
-
-const currentDate = getCurrentDate();
-console.log(currentDate); // Output: 2024-05-22
 
 
 
@@ -76,35 +69,36 @@ const averagePercentage = totalPercentage / (getrecord?.length || 1);
 const formattedAveragePercentage = averagePercentage.toFixed(2); 
 
 
-const displayrecord = (): void => {
+const displayrecord = useCallback((): void => {
   const lowValues: number[] = [];
-  const numvalues:number[]=[]
-  const passvalues:number[]=[]
-  const worstvalues:number[]=[]
-  getrecord?.forEach((item) => {  
+  const numvalues: number[] = [];
+  const passvalues: number[] = [];
+  const worstvalues: number[] = [];
+
+  getrecord?.forEach((item) => {
     const pars = parseFloat(item.Percentage);
     if (pars < 33) {
       lowValues.push(pars);
     }
-    if(pars>70){
-      numvalues.push(pars)
+    if (pars > 70) {
+      numvalues.push(pars);
     }
-    if(pars>=33 ){
-      passvalues.push(pars)
+    if (pars >= 33) {
+      passvalues.push(pars);
     }
-    if(pars<25){
-      worstvalues.push(pars)
+    if (pars < 25) {
+      worstvalues.push(pars);
     }
   });
   setpercent(lowValues);
-  setnumber(numvalues)
-  setpassvalues(passvalues)
-  setworstvalues(worstvalues)
-};
+  setnumber(numvalues);
+  setpassvalues(passvalues);
+  setworstvalues(worstvalues);
+}, [getrecord]);
 
 useEffect(() => {
   displayrecord();
-});
+},[displayrecord]);
 
 
   return (
