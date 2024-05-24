@@ -11,11 +11,13 @@ export async function GET(req: Request) {
           select: {
             id: true,
             name: true,
+           
             // Select subcategories and within them, select subjects
             subcategory: {
               select: {
                 id: true,
                 name: true,
+                
                 // Select subjects and within them, select chapters
                 subject: {
                   select: {

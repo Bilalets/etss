@@ -46,7 +46,7 @@ const quiz = {
   ],
 };
 
-const TestStart = ({ params }: { params: { id: string } }) => {
+const TestStart = () => {
   let time = 30;
   let counter = 1;
   const [getData,setData]=useState<Questionbank[]>([])
@@ -55,7 +55,7 @@ const TestStart = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`/api/Service/Getsubjectquestions/${params.id}`);
+        const response = await axios.get(`/api/Service/Getsubjectquestions/`);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -63,7 +63,7 @@ const TestStart = ({ params }: { params: { id: string } }) => {
     };
 
     fetchData();
-  }, [params.id]);
+  }, []);
 console.log(getData)
 
   const [activeQuestion, setActiveQuestion] = useState(0);

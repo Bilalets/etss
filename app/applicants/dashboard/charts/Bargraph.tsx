@@ -1,6 +1,70 @@
-import React from 'react'
+"use client";
+import React, { useEffect, useState } from "react";
 import ReactECharts from 'echarts-for-react';
+import { useSession } from "next-auth/react";
+import axios from "axios";
+interface record{
+  Percentage: string
+  Correctawn: string
+  Wrongawn: string
+  subjectname: string
+}
+
+interface ID{
+  id:string
+}
+
+
 const Bargraph = () => {
+  const { data: session, status } = useSession();
+  const [getData,setData]=useState<ID>()
+  const [getrecord,setrecord]=useState<record[]>()
+  const [getmathsrec,setmathsrec]=useState<record[]>()
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.post("/api/Getuserid",{email:session?.user?.email});
+      if (response.status === 200) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  fetchData();
+}, [session]);
+
+useEffect(()=>{
+  const fetchresult=async()=>{
+    try {
+      const response = await axios.post("/api/Service/Getenglishrecord",{userId:getData?.id,subjectname:'English'});
+      setrecord(response.data)
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+  fetchresult()
+},[getData])
+
+useEffect(()=>{
+  const fetchresult=async()=>{
+    try {
+      const response = await axios.post("/api/Service/Getenglishrecord",{userId:getData?.id,subjectname:'English'});
+      setrecord(response.data)
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+  fetchresult()
+},[getData])
+
+const totalPercentage = getrecord?.reduce((total, item) => {
+  return total + parseInt(item.Percentage);
+}, 0) ?? 0;
+
+const averagePercentage = getrecord?.length ? totalPercentage / getrecord.length : 0;
+console.log(averagePercentage)
     const options = {
         tooltip: {
           // Configure tooltip
@@ -16,14 +80,14 @@ const Bargraph = () => {
         xAxis: {
           type: 'category',
           data: [
-            'Branch A',
-            'Branch B',
-            'Branch C',
-            'Branch D',
-            'Branch E',
-            'Branch F',
-            'Branch G',
-            'Branch H',
+            'English',
+            'Urdu',
+            'Maths',
+            'General Knowledge',
+            'Pak Study',
+            'Computer Science',
+            'Biology',
+            'Chemistry',
           ],
         },
         yAxis: {
@@ -33,7 +97,7 @@ const Bargraph = () => {
         },
         series: [
           {
-            data: [40, 95, 80, 60, 80, 50, 30, 10],
+            data: [averagePercentage, 0, 50, 0, 65, 0, 0, 0],
             type: 'bar',
             showBackground: true,
             backgroundStyle: {

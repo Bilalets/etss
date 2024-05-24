@@ -3,8 +3,6 @@ import prisma from '../../../libs/prismadb'
 interface chap{
     name:string
     subjectsId: string;
-
-
 }
 
 export async function POST(req:Request) {

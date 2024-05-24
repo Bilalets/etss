@@ -1,9 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Image from "next/image";
-import { ChevronLeftIcon, ChevronRightIcon, PlayIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
 import Link from "next/link";
+import { MyAssessment } from "../assessment/components";
 
 interface Chapter {
   id: string;
@@ -35,13 +38,18 @@ interface Test {
 }
 
 const Home = () => {
-  const [getData, setData] = useState<Test[]>();
-  const [checkId, setcheckId] = useState<Test>();
-  const [serData, setserData] = useState<Test>();
-  const [getSubcategory, setSubcategory] = useState<Category | null>(null);
-  const [subjectsArray, setSubjectsArray] = useState<Subcategory | null>(null);
+  var settings = {
+    infinite: false,
+    speed: 200,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
 
-  const itemWidth = 0; // Adjust the item width accordingly
+  const [getData, setData] = useState<Test[]>();
+  const [serData, setSerData] = useState<Test>();
+  const [selectedSubcategories, setSelectedSubcategories] = useState<{
+    [categoryId: string]: Subcategory | null;
+  }>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,220 +66,119 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const [set, seed] = useState<Subcategory[]>([]);
-
-  const [translateValue, setTranslateValue] = useState(0);
-
-  const containerWidth = itemWidth * set.length;
-
-  useEffect(() => {
-    if (getSubcategory) {
-      const subcategories = getSubcategory.subcategory;
-      seed(subcategories);
-    }
-  }, [getSubcategory, seed]);
-
-  const handleMoveRight = () => {
-    const firstItem = set[0];
-    const newSet = set.slice(1).concat(firstItem);
-    seed(newSet);
-  
-    const newTranslateValue = translateValue - itemWidth;
-  
-    if (newTranslateValue < -(set.length - 1) * itemWidth) {
-    
-      setTranslateValue(-(containerWidth - itemWidth));
-    } else {
-      setTranslateValue(newTranslateValue);
-    }
-  };
-  
-  const handleMoveLeft = () => {
-    const lastItem = set[set.length - 1];
-    const newSet = [lastItem, ...set.slice(0, -1)];
-    seed(newSet);
-  
-    const newTranslateValue = translateValue + itemWidth;
-  
-    if (newTranslateValue > 0) {
-      // At the beginning of the set, allow moving left
-      setTranslateValue(0);
-    } else {
-      setTranslateValue(newTranslateValue);
-    }
-  };
-  const subcategorydata = (item: Category) => {
-    setSubcategory(item);
+  const displayService = (item: Test) => {
+    setSerData(item);
   };
 
-  const serviceData = (item: Test) => {
-    setserData(item);
-    setcheckId(item)
+  const displaysubject = (categoryId: string, subcategory: Subcategory) => {
+    setSelectedSubcategories((prev) => ({
+      ...prev,
+      [categoryId]: subcategory,
+    }));
   };
-
-  const subjectData = (item: Subcategory) => {
-    setSubjectsArray(item);
-  };
-
-  const [getSubject, setSubject] = useState<Subject[]>([]);
-  const [subtranslateValue, setsubTranslateValue] = useState(0);
-  const containerWidths = itemWidth * 0
-
-  useEffect(() => {
-    if (subjectsArray) {
-      const sub = subjectsArray.subject;
-      setSubject(sub);
-    }
-  }, [subjectsArray, setSubject]);
-
-  const handleMoveRightss = () => {
-    const firstItem = getSubject[0];
-    const newSet = getSubject.slice(1).concat(firstItem);
-    setSubject(newSet);
-
-    const newTranslateValuee = subtranslateValue - itemWidth;
-
-    if (Math.abs(newTranslateValuee) >= containerWidths) {
-      setsubTranslateValue(0);
-    } else {
-      setsubTranslateValue(newTranslateValuee);
-    }
-  };
-
-  const handleMoveLeftt = () => {
-    const lastItem = getSubject[getSubject.length - 1];
-    const newSet = [lastItem, ...getSubject.slice(0, -1)];
-    setSubject(newSet);
-
-    const newTranslateValue = subtranslateValue + itemWidth;
-
-    if (newTranslateValue > 0) {
-      setsubTranslateValue(-(containerWidths - itemWidth));
-    } else {
-      setsubTranslateValue(newTranslateValue);
-    }
-  };
-
   return (
     <>
-      <div className="text-white gap-5 flex flex-row  h-32 w-full border-2 bg-red-600 shadow-2xl font-medium text-2xl px-5 py-2.5  items-center">
-      {getData?.map((Service) => (
-  <div
-    key={Service.id}
-    onClick={() => serviceData(Service)}
-    className="flex cursor-pointer"
-    style={{ fontWeight: checkId?.id === Service.id ? 'bold' : 'normal' }}
-  >
-    {Service.name}
-  </div>
-))}
+      <div className="flex flex-row gap-5 justify-center mt-10">
+        {getData?.map((item) => (
+          <div key={item.id} onClick={() => displayService(item)}>
+            <button className="relative group cursor-pointer text-sky-50 overflow-hidden h-40 w-96 rounded-md bg-sky-800 p-2 flex justify-center items-center font-extrabold">
+              <div className="absolute top-3 right-20 group-hover:top-12 group-hover:-right-12 z-10 w-40 h-40 rounded-full group-hover:scale-150 group-hover:opacity-50 duration-500 bg-sky-900"></div>
+              <div className="absolute top-3 right-20 group-hover:top-12 group-hover:-right-12 z-10 w-32 h-32 rounded-full group-hover:scale-150 group-hover:opacity-50 duration-500 bg-sky-800"></div>
+              <div className="absolute top-3 right-20 group-hover:top-12 group-hover:-right-12 z-10 w-24 h-24 rounded-full group-hover:scale-150 group-hover:opacity-50 duration-500 bg-sky-700"></div>
+              <div className="absolute top-3 right-20 group-hover:top-12 group-hover:-right-12 z-10 w-14 h-14 rounded-full group-hover:scale-150 group-hover:opacity-50 duration-500 bg-sky-600"></div>
+              <p className="z-10 text-xl">{item.name}</p>
+            </button>
+          </div>
+        ))}
       </div>
+      <div className="grid grid-cols-4 grid-rows-2 ml-16">
+        {serData?.category.map((item) => (
+          <div key={item.id} className="flex">
+            <div className="mt-10">
+              <div className="h-[450px] w-[350px] bg-white m-auto shadow-md rounded-[1em] overflow-hidden relative group p-2 z-0">
+                <div className="circle absolute h-[5em] w-[5em] -top-[2.5em] -right-[2.5em] rounded-full bg-[#FF5800] group-hover:scale-[1330%] duration-500 z-[-1]"></div>
 
-      <div className="flex flex-row ml-10 mt-[-25px] gap-3">
-        {serData?.category?.map((Cat) => (
-          <div key={Cat.id} onClick={() => subcategorydata(Cat)}>
-            <div>
-              <button className="py-2.5 px-5 shadow-md me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                {Cat.name}
-              </button>
+                <button className="text-[0.8em] absolute bottom-[1em] left-[1em] text-[#6C3082] group-hover:text-[white] duration-500"></button>
+
+                <button className="relative border hover:border-sky-600 duration-500 group cursor-pointer text-sky-50 overflow-hidden h-12 w-32 rounded-md bg-sky-800 p-2 flex justify-center items-center font-extrabold">
+                  <div className="absolute z-10 w-48 h-48 rounded-full group-hover:scale-150 transition-all duration-500 ease-in-out bg-sky-900 delay-150 group-hover:delay-75"></div>
+                  <div className="absolute z-10 w-40 h-40 rounded-full group-hover:scale-150 transition-all duration-500 ease-in-out bg-sky-800 delay-150 group-hover:delay-100"></div>
+                  <div className="absolute z-10 w-32 h-32 rounded-full group-hover:scale-150 transition-all duration-500 ease-in-out bg-sky-700 delay-150 group-hover:delay-150"></div>
+                  <div className="absolute z-10 w-24 h-24 rounded-full group-hover:scale-150 transition-all duration-500 ease-in-out bg-sky-600 delay-150 group-hover:delay-200"></div>
+                  <div className="absolute z-10 w-16 h-16 rounded-full group-hover:scale-150 transition-all duration-500 ease-in-out bg-sky-500 delay-150 group-hover:delay-300"></div>
+                  <p className="z-10">{item.name}</p>
+                </button>
+
+                <div className="flex ml-3 justify-center">
+                  <div className="w-60 mt-10 justify-center items-center text-center">
+                    <Slider {...settings}>
+                      {item.subcategory.map((sub) => (
+                        <div
+                          className="justify-center items-center"
+                          key={sub.id}
+                        >
+                          <button
+                            onClick={() => displaysubject(item.id, sub)}
+                            className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
+                          >
+                            <span className=" group-hover:text-[white]   relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                              {sub.name}
+                            </span>
+                          </button>
+                        </div>
+                      ))}
+                    </Slider>
+                  </div>
+                </div>
+
+                <div className="mt-12 ml-[20px] group-hover:text-[white]">
+                  <div>
+                    <b>Overview</b>
+                  </div>
+
+                  <div>
+                    <p>Islamic Studies, General Science</p>
+                  </div>
+                  <div>
+                    <p>Total Questions: 100</p>
+                  </div>
+                </div>
+
+                {selectedSubcategories[item.id] && (
+                  <div className="flex mt-10 justify-center">
+                    <div className="w-60  justify-center items-center text-center">
+                      <Slider {...settings}>
+                        {selectedSubcategories[item.id]?.subject.map((sub) => (
+                          <div
+                            className="flex justify-center items-center"
+                            key={sub.id}
+                          >
+                            <Link
+                              href={{
+                                pathname: "/applicants/assessment/Tests",
+                                query: {
+                                  subjectname: sub.name,
+                                  Subjectid: sub.id,
+                                },
+                              }}
+                            >
+                              <button className="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
+                                <span className="group-hover:text-[white]  relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                                  {sub.name}
+                                </span>
+                              </button>
+                            </Link>
+                          </div>
+                        ))}
+                      </Slider>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
       </div>
-
-      {getSubcategory && (
-        <div className="flex items-center flex-col shadow-xl ml-10 border-2 rounded-lg mb-9 mt-7 bg-white h-[450px] w-[450px]">
-          <div>
-            <Image
-              src={"/images/paper.jpg"}
-              width={150}
-              height={150}
-              alt="pic"
-              className="rounded-md mt-5"
-            />
-          </div>
-          <div>
-            <div className="flex flex-row items-center">
-           
-  <button onClick={() => handleMoveLeft()} className="mt-8">
-    <ChevronLeftIcon className="w-8 h-8" />
-  </button>
-
-              <div className="flex overflow-hidden">
-                <div
-                  className="flex w-auto max-w-[350px] transition-transform duration-500"
-                  style={{
-                    transform: `translateX(${translateValue}px)`,
-                  }}
-                >
-                  <div className="flex flex-row gap-2 mt-10">
-                    {set.map((item) => (
-                      <div className="flex" key={item.id}>
-                        <button
-                          onClick={() => subjectData(item)}
-                          type="button"
-                          className="text-gray-900  inline-flex items-center shadow-lg bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 px-2.5 py-2.5 font-medium rounded-lg text-sm whitespace-nowrap dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                        >
-                          {item.name}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <button onClick={() => handleMoveRight()} className="mt-8">
-                <ChevronRightIcon className="w-8 h-8" />
-              </button>
-            </div>
-          </div>
-
-          <div className="mt-3">
-            <b>Overview</b>
-            <p className=" mt-3">Subject Includes: English, Maths</p>
-            <p>Number Of Attempts:100</p>
-          </div>
-          <div className="w-full h-[0.5px] bg-gray-300 mt-3"></div>
-
-          {getSubject && getSubject.length > 0 ? (
-            <div className="flex flex-row mt-[-20px]">
-              <div className="flex">
-                <button onClick={() => handleMoveLeftt()} className="mt-8">
-                  <ChevronLeftIcon className="w-8 h-8" />
-                </button>
-                <div className="overflow-hidden">
-                  <div
-                    className="flex w-auto max-w-[350px] transition-transform duration-500"
-                    style={{
-                      transform: `translateX(${subtranslateValue}px)`,
-                    }}
-                  >
-                    <div className="flex mt-10 gap-2">
-                      {getSubject.map((item) => (
-                        <div className="flex" key={item?.id}>
-                          <Link href={`/applicants/assessment/${item.id}`}>
-                          <button
-                            type="button"
-                            className="text-gray-900 inline-flex items-center shadow-md bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 px-2.5 py-2.5 font-medium rounded-lg text-sm whitespace-nowrap dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                          >
-                            {item?.name}
-                          </button>
-                          </Link>
-                         
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <button onClick={() => handleMoveRightss()} className="mt-8">
-                  <ChevronRightIcon className="w-8 h-8" />
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div></div>
-          )}
-        </div>
-      )}
     </>
   );
 };

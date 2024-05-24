@@ -60,7 +60,13 @@ const Profile: React.FC = () => {
   function closemodels() {
     isopen(false);
   }
-
+  const formatDate = (dateString:string) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${day}-${month}-${year}`;
+  };
   const model = (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
       <div className="relative bg-white rounded-lg p-8 w-[400px] items-center justify-center">
@@ -255,7 +261,7 @@ const Profile: React.FC = () => {
                         Date of Birth
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {item.dateofBirth}
+                         {formatDate(item.dateofBirth)}
                       </dd>
                     </div>
                   </dl>
