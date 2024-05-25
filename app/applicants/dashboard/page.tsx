@@ -296,8 +296,10 @@ const Dashboard = () => {
                   </div>
                 </li>
               </ul>
-
               <div className="ml-5 mt-10 font-semibold">
+               Index : 0%
+              </div>
+              <div className="ml-5 mt-5 font-semibold">
                 Overall Ratio : {formattedAveragePercentage}%
               </div>
             </div>
