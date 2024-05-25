@@ -97,7 +97,7 @@ const Piechart = () => {
         label: {
           show: true,
           position: "center",
-          formatter: "{d}%",
+          formatter: `${set}%`,
           fontSize: 20,
         },
         emphasis: {
@@ -112,7 +112,7 @@ const Piechart = () => {
         },
         data: [
           {
-            value: 100, // Use the number here
+            value: set, 
             itemStyle: { borderRadius: [6, 6, 0, 0] },
           },
           {

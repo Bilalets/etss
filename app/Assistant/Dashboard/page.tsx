@@ -285,8 +285,8 @@ const Questionbankhome: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-row gap-16 ">
-        <div className=" text-center w-[250px] h-[530px]  ml-20 bg-white mb-10 shadow border-1 ">
+      <div className="flex flex-row gap-16  ">
+        <div className=" text-center w-[250px] h-[530px]  ml-20 bg-white mb-10 shadow border-1 overflow-scroll ">
           <div className=" flex flex-row gap-6 h-[50px] bg-gray-800 text-white justify-center items-center ">
             <div>
               <BookOpen />
@@ -305,7 +305,7 @@ const Questionbankhome: React.FC = () => {
             <Menu>
               <hr />
               {selectedSubcategory?.subject.map((subject) => (
-                <div key={subject.id}>
+                <div key={subject.id} >
                   <div
                     style={{
                       backgroundColor:

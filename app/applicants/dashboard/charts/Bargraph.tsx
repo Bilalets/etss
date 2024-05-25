@@ -240,7 +240,7 @@ const averagePercentageisl=getislamicstudy?.length?totalPercentageisl/getislamic
         },
         series: [
           {
-            data: [averagePercentage,averagePercentagepk, averagePercentageisl, averagePercentagemath,averagePercentagebio,averagePercentagephy, averagePercentagechem, averagePercentagegk],
+            data: [averagePercentage.toFixed(2),averagePercentagepk.toFixed(2), averagePercentageisl.toFixed(2), averagePercentagemath.toFixed(2),averagePercentagebio.toFixed(2),averagePercentagephy.toFixed(2), averagePercentagechem.toFixed(2), averagePercentagegk.toFixed(2)],
             type: 'bar',
             showBackground: true,
             backgroundStyle: {

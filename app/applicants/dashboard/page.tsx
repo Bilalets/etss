@@ -92,24 +92,18 @@ const Dashboard = () => {
      
 
       const pars = parseFloat(item.Percentage);
-      if (pars <= 33) {
+      if (pars < 33) {
         worstvalues.push(pars);
-      }
-      if (pars > 70) {
-        Bettervalues.push(pars);
-      }
-      if (pars > 60) {
-        Goodvalues.push(pars);
-      }
-
-      if (pars > 90) {
-        Excellentvalues.push(pars);
-      }
-      if (pars > 80) {
-        Bestvalues.push(pars);
-      }
-      if (pars < 39) {
+      } else if (pars < 39) {
         Averagevalues.push(pars);
+      } else if (pars > 90) {
+        Excellentvalues.push(pars);
+      } else if (pars > 80) {
+        Bestvalues.push(pars);
+      } else if (pars > 70) {
+        Bettervalues.push(pars);
+      } else if (pars > 60) {
+        Goodvalues.push(pars);
       }
     });
     setExcellentval(Excellentvalues);
@@ -120,7 +114,7 @@ const Dashboard = () => {
     setworstvalues(worstvalues)
 
   }, [getrecord]);
-
+console.log(getrecord)
   useEffect(() => {
     displayrecord();
   }, [displayrecord]);

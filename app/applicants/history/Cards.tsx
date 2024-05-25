@@ -23,7 +23,7 @@ const Cards = () => {
 useEffect(() => {
   const fetchData = async () => {
     try {
-      const response = await axios.post("/api/Getuserid",{email:session?.user?.email});
+      const response = await axios.post("/api/Getuserid",{email:session?.user?.email}, { headers: { "Cache-Control": "no-store" } });
       if (response.status === 200) {
         setData(response.data);
       }
@@ -45,7 +45,7 @@ const formatDate = (dateString:string) => {
 useEffect(()=>{
   const fetchresult=async()=>{
     try {
-      const response = await axios.post("/api/Service/Subrecord",{userId:getData?.id});
+      const response = await axios.post("/api/Service/Subrecord",{userId:getData?.id}, { headers: { "Cache-Control": "no-store" } });
       setrecord(response.data)
     } catch (error) {
       console.error("Error fetching data:", error);
