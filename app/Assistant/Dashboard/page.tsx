@@ -14,6 +14,8 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import {
   Sidebar,
   Menu,
@@ -21,6 +23,7 @@ import {
   SubMenu,
   sidebarClasses,
 } from "react-pro-sidebar";
+import Slider from "react-slick";
 type QuestionRequestData = {
   questionName: string | undefined;
   awnsers: (string | undefined)[];
@@ -33,6 +36,13 @@ interface Chapter {
   id: string;
   name: string;
 }
+
+interface ArrowProps {
+  className?: string;
+  style?: React.CSSProperties;
+  onClick?: () => void;
+}
+
 interface chap {
   id: string;
   name: string;
@@ -60,166 +70,171 @@ interface Test {
   name: string;
   category: Category[];
 }
-const Questionbankhome = () => {
-    const [getdata, setdata] = useState<Test[]>([]);
-    const [question, setQuestion] = useState<string>();
-    const [correctAwn, setCorrectAwn] = useState<string>();
-    const [getchapid, setchapid] = useState<Chapter>();
-    const [awnser1, setAwnser1] = useState<string>();
-    const [awnser2, setAwnser2] = useState<string>();
-    const [awnser3, setAwnser3] = useState<string>();
-    const [awnser4, setAwnser4] = useState<string>();
-    const [selectedservice, Setselectedservice] = useState<Test>();
-    const [selectedcattegory, Setselectedcategory] = useState<Category>();
-    const [selectedSubcategory, setSelectedSubcategory] = useState<Subcategory>();
-    const [selectedSubject, setSelectedSubject] = useState<Subject>();
-    const [clickedSubjectId, setClickedSubjectId] = useState<Subject >();
-    const {data:session}=useSession()
-    const handleSignOut = async () => {
-        const data = await signOut({ redirect: true, callbackUrl: '/' })
-        
-       
-    
-      }
-   
-    const handleSubcategoryClick = (item: Subcategory) => {
-      setSelectedSubcategory(item);
-    };
-    const handlesubjectClick = (item: Subject) => {
-      setSelectedSubject(item);
-      setClickedSubjectId(item)
-       
-      
-    };
-  
-    const handlecategoryclick = (item: Category) => {
-      Setselectedcategory(item);
-    };
-  
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/api/Allservices/");
-       
-        const data = response.data;
-        setdata(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    useEffect(() => {
-      fetchData();
-    }, []);
-    
-    const [set, seed] = useState<Subcategory[]>([]);
-    const [translateValue, setTranslateValue] = useState(0);
-    const itemWidth = 60;
-    //
-    const containerWidth = itemWidth * set.length;
-    useEffect(() => {
-      if (selectedcattegory) {
-        const subcategories = selectedcattegory.subcategory;
-        seed(subcategories);
-      }
-    }, [selectedcattegory, seed]);
-    const handleMoveRight = () => {
-      const firstItem = set[0];
-      const newSet = set.slice(1).concat(firstItem);
-      seed(newSet);
-  
-      const newTranslateValue = translateValue - itemWidth;
-  
-      if (Math.abs(newTranslateValue) >= containerWidth) {
-        setTranslateValue(0);
-      } else {
-        setTranslateValue(newTranslateValue);
-      }
-    };
-  
-    const handleMoveLeft = () => {
-      const lastItem = set[set.length - 1];
-      const newSet = [lastItem, ...set.slice(0, -1)];
-      seed(newSet);
-  
-      const newTranslateValue = translateValue + itemWidth;
-  
-      if (newTranslateValue > 0) {
-        setTranslateValue(-(containerWidth - itemWidth));
-      } else {
-        setTranslateValue(newTranslateValue);
-      }
-    };
-  
-    let displaycategory = selectedservice?.category.map((item) => (
+
+const Questionbankhome: React.FC = () => {
+  const [getdata, setdata] = useState<Test[]>([]);
+  const [question, setQuestion] = useState<string>();
+  const [correctAwn, setCorrectAwn] = useState<string>();
+  const [getchapid, setchapid] = useState<Chapter>();
+  const [awnser1, setAwnser1] = useState<string>();
+  const [awnser2, setAwnser2] = useState<string>();
+  const [awnser3, setAwnser3] = useState<string>();
+  const [awnser4, setAwnser4] = useState<string>();
+  const [selectedservice, Setselectedservice] = useState<Test>();
+  const [selectedcattegory, Setselectedcategory] = useState<Category>();
+  const [selectedSubcategory, setSelectedSubcategory] = useState<Subcategory>();
+  const [selectedSubject, setSelectedSubject] = useState<Subject>();
+  const [clickedSubjectId, setClickedSubjectId] = useState<Subject>();
+  const { data: session } = useSession();
+
+
+  const SamplePrevArrow: React.FC<ArrowProps> = (props) => {
+    const { className, style, onClick } = props;
+    return (
       <div
-        onClick={() => handlecategoryclick(item)}
-        className="flex flex-row gap-5"
-        key={item.id}
-      >
-        {item.name}
-      </div>
-    ));
-    const handleservicechange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const selectedserviceId = event.target.value;
-      const selservice = getdata?.find((ser) => ser.name === selectedserviceId);
-      Setselectedservice(selservice);
-    };
+        className={className}
+        style={{ ...style,  display: "block", backgroundColor: "black"  }}
+        onClick={onClick}
+      />
+    );
+  };
   
-    const handleChapterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const selectedChapterId = event.target.value;
-      const selectedChapter = selectedSubject?.chapters.find(
-        (chapter) => chapter.id === selectedChapterId
-      );
-  
-      setchapid(selectedChapter);
-    };
-    const clearInputs = () => {
-     
-      setQuestion("");
-      setCorrectAwn("");
-      setAwnser1("");
-      setAwnser2("");
-      setAwnser3("");
-      setAwnser4("");
-      
-      
-    };
-    const addQuestion = async () => {
-      try {
-        let requestData: QuestionRequestData = {
-          questionName: question,
-          awnsers: [awnser1, awnser2, awnser3, awnser4],
-          correctAwnser: correctAwn,
-        };
-  
-        if (selectedSubcategory && !selectedSubject && !getchapid) {
-          // Subcategory selected
-          requestData.subcategoryId = selectedSubcategory.id;
-          await axios.post("/api/Service/subcatquestions", requestData);
-        } else if (selectedSubject && !getchapid) {
-          // Subject selected
-          requestData.subjectsId = selectedSubject.id;
-          await axios.post("/api/Service/Subjectquestions", requestData);
-        } else if (getchapid) {
-          // Chapter selected
-          requestData.chaptersId = getchapid.id;
-          await axios.post("/api/Service/Chapterquestions", requestData);
-        } else {
-          console.error("Please select a valid subcategory, subject, or chapter");
-        }
-        clearInputs();
-        toast.success("Question saved successfully!");
-        
-      } catch (error) {
-        console.error("Error saving question:", error);
-        toast.error("Failed to save question.");
+  const SampleNextArrow: React.FC<ArrowProps> = (props) => {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        className={className}
+        style={{ ...style, display: "flex", backgroundColor: "black" }}
+        onClick={onClick}
+      />
+    );
+  };
+  var settings = {
+    infinite: false,
+    speed: 200,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    nextArrow: <SampleNextArrow/>,
+    prevArrow: <SamplePrevArrow />
+  };
+
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: true, callbackUrl: "/" });
+  };
+
+  const handleSubcategoryClick = (item: Subcategory) => {
+    setSelectedSubcategory(item);
+  };
+  const handlesubjectClick = (item: Subject) => {
+    setSelectedSubject(item);
+    setClickedSubjectId(item);
+  };
+
+  const handlecategoryclick = (item: Category) => {
+    Setselectedcategory(item);
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/api/Allservices/");
+
+      const data = response.data;
+      setdata(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
+ 
+  let displaycategory = selectedservice?.category.map((item) => (
+    <div
+      onClick={() => handlecategoryclick(item)}
+      className="flex flex-row gap-5"
+      key={item.id}
+    >
+      {item.name}
+    </div>
+  ));
+  const handleservicechange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedserviceId = event.target.value;
+    const selservice = getdata?.find((ser) => ser.name === selectedserviceId);
+    Setselectedservice(selservice);
+  };
+
+  const handleChapterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedChapterId = event.target.value;
+    const selectedChapter = selectedSubject?.chapters.find(
+      (chapter) => chapter.id === selectedChapterId
+    );
+
+    setchapid(selectedChapter);
+  };
+  const clearInputs = () => {
+    setQuestion("");
+    setCorrectAwn("");
+    setAwnser1("");
+    setAwnser2("");
+    setAwnser3("");
+    setAwnser4("");
+  };
+
+
+
+
+
+  const addQuestion = async () => {
+    if (!question || !correctAwn || !awnser1 || !awnser2 || !awnser3 || !awnser4) {
+      alert("Please fill in all fields before saving the question.");
+      return; 
+    }
+    try {
+      let requestData: QuestionRequestData = {
+        questionName: question,
+        awnsers: [awnser1, awnser2, awnser3, awnser4],
+        correctAwnser: correctAwn,
+      };
+
+      if (selectedSubcategory && !selectedSubject && !getchapid) {
+        // Subcategory selected
+        requestData.subcategoryId = selectedSubcategory.id;
+        await axios.post("/api/Service/subcatquestions", requestData);
+      } else if (selectedSubject && !getchapid) {
+        // Subject selected
+        requestData.subjectsId = selectedSubject.id;
+        await axios.post("/api/Service/Subjectquestions", requestData);
+      } else if (getchapid) {
+        // Chapter selected
+        requestData.chaptersId = getchapid.id;
+        await axios.post("/api/Service/Chapterquestions", requestData);
+      } else {
+        console.error("Please select a valid subcategory, subject, or chapter");
       }
-    };
+      clearInputs();
+      toast.success("Question saved successfully!");
+    } catch (error) {
+      console.error("Error saving question:", error);
+      toast.error("Failed to save question.");
+    }
+  };
   return (
     <>
-    <h1>Logged in as {session?.user?.name}</h1>
-     <div className='flex flex-row m-5'>
-     <button onClick={()=>handleSignOut()} className='flex flex-row text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700'>Logout<span><LogOutIcon/></span></button>
-      </div> 
+      <h1>Logged in as {session?.user?.name}</h1>
+      <div className="flex flex-row m-5">
+        <button
+          onClick={() => handleSignOut()}
+          className="flex flex-row text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+        >
+          Logout
+          <span>
+            <LogOutIcon />
+          </span>
+        </button>
+      </div>
       <div className="flex flex-row items-center  ml-[690px] mb-10 gap-5">
         <div className=" flex ml-[-300px]">
           <h1 className="text-xl">Select Service</h1>
@@ -237,7 +252,7 @@ const Questionbankhome = () => {
         </div>
       </div>
       <div className=" flex flex-col  gap-10">
-        <div className=" flex flex-row rounded-md bg-white gap-14 shadow h-14 w-[600px] ml-[390px] items-center justify-center">
+        <div className=" flex flex-row rounded-md bg-white gap-14 shadow h-14 w-[700px] ml-[390px] items-center justify-center">
           <div className=" mt-1 ml-[-160px] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-3xl text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
             Categories
           </div>
@@ -245,38 +260,28 @@ const Questionbankhome = () => {
             {displaycategory}
           </div>
         </div>
-        <div className="flex flex-row bg-white items-center shadow rounded-md   h-16 w-[600px] ml-[390px]">
-          <div className=" ml-3">
-            <button onClick={() => handleMoveLeft()}>
-              {" "}
-              <PlayIcon className="transform -scale-x-100" />
-            </button>
-          </div>
-          <div className="overflow-hidden w-[300px] ml-[100px]">
-            <div
-              className="flex transition-transform duration-300 gap-10 "
-              style={{
-                transform: `translateX(${translateValue}px)`,
-              }}
-            >
-              {set.map((item) => (
-                <div
-                  key={item.id}
-                  className="cursor-pointer w-[500px]"
-                  onClick={() => handleSubcategoryClick(item)}
-                >
-                  {item.name}
+        <div className="flex flex-row bg-white items-center shadow rounded-md h-20 w-[700px] ml-[390px]">
+          
+        <div className="flex ml-52 justify-center items-center" >
+                  <div className="w-60  justify-center items-center text-center ">
+                    <Slider {...settings} >
+                      {selectedcattegory?.subcategory.map((sub) => (
+                        <div
+                          className="justify-center items-center"
+                          key={sub.id}
+                        >
+                          <button
+                             onClick={() => handleSubcategoryClick(sub)}
+                            className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                          >
+                         {sub.name}
+                          </button>
+                        </div>
+                      ))}
+                    </Slider>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <button onClick={() => handleMoveRight()} className=" ml-32">
-              {" "}
-              <PlayIcon className="w-6 h-6" />
-            </button>
-          </div>
+        
         </div>
       </div>
 
@@ -301,11 +306,16 @@ const Questionbankhome = () => {
               <hr />
               {selectedSubcategory?.subject.map((subject) => (
                 <div key={subject.id}>
-                  <div    style={{
-        backgroundColor: clickedSubjectId?.id === subject.id ? "Black" : "white",
-        color:clickedSubjectId?.id === subject.id ? "white" : "Black",
-        cursor: "pointer",
-    }} onClick={() => handlesubjectClick(subject)}>
+                  <div
+                    style={{
+                      backgroundColor:
+                        clickedSubjectId?.id === subject.id ? "Black" : "white",
+                      color:
+                        clickedSubjectId?.id === subject.id ? "white" : "Black",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handlesubjectClick(subject)}
+                  >
                     <hr />
                     <MenuItem> {subject.name}</MenuItem>
                   </div>
@@ -339,7 +349,7 @@ const Questionbankhome = () => {
               <div>
                 <p className=" font-semibold">Question</p>
                 <input
-                value={question}
+                  value={question}
                   placeholder="Enter Awnser-5 Text"
                   className="bg-gray-100 w-80 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
@@ -349,7 +359,7 @@ const Questionbankhome = () => {
               <div>
                 <p className=" font-semibold">Awnser 1</p>
                 <input
-                value={awnser1}
+                  value={awnser1}
                   placeholder="Enter Awnser-5 Text"
                   className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
@@ -359,7 +369,7 @@ const Questionbankhome = () => {
               <div>
                 <p className=" font-semibold">Awnser 2</p>
                 <input
-                value={awnser2}
+                  value={awnser2}
                   placeholder="Enter Awnser-5 Text"
                   className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
@@ -372,7 +382,7 @@ const Questionbankhome = () => {
               <div>
                 <p className=" font-semibold">Awnser 3</p>
                 <input
-                   value={awnser3}
+                  value={awnser3}
                   placeholder="Enter Awnser-5 Text"
                   className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
@@ -382,7 +392,7 @@ const Questionbankhome = () => {
               <div>
                 <p className=" font-semibold">Awnser 4</p>
                 <input
-                   value={awnser4}
+                  value={awnser4}
                   placeholder="Enter Awnser-5 Text"
                   className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
@@ -392,7 +402,7 @@ const Questionbankhome = () => {
               <div>
                 <p className=" font-semibold">Correct Awnser</p>
                 <input
-                value={correctAwn}
+                  value={correctAwn}
                   placeholder="Enter Awnser-5 Text"
                   className="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                   type="text"
@@ -424,8 +434,10 @@ const Questionbankhome = () => {
           </div>
         </div>
       </div>
+  
+
     </>
-  )
-}
+  );
+};
 
 export default Questionbankhome;

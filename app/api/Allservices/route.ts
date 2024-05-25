@@ -11,6 +11,9 @@ export async function GET(req: Request) {
           select: {
             id: true,
             name: true,
+          Desc:true,
+          Prep:true,
+          Subs:true,
            
             // Select subcategories and within them, select subjects
             subcategory: {

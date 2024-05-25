@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { cache, useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import axios from "axios";
@@ -12,31 +12,38 @@ const DynamicBargraph = dynamic(() => import("./charts/Bargraph"), {
 const DynamicPiechart = dynamic(() => import("./charts/Piechart"), {
   ssr: false,
 });
-interface record{
-  Percentage: string
-  Correctawn: string
-  Wrongawn: string
-  subjectname: string
+interface record {
+  Percentage: string;
+  Correctawn: string;
+  Wrongawn: string;
+  subjectname: string;
 }
 
-interface ID{
-  id:string
+interface ID {
+  id: string;
 }
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
-  const [getData,setData]=useState<ID>()
-  const [getrecord,setrecord]=useState<record[]>()
-  const [percent,setpercent]=useState<number[]>()
-  const [getnumber,setnumber]=useState<number[]>()
-  const [passvaluess,setpassvalues]=useState<number[]>()
-  const [worstval,setworstvalues]=useState<number[]>()
+  const [getData, setData] = useState<ID>();
+  const [getrecord, setrecord] = useState<record[]>();
+  const [Excellentval, setExcellentval] = useState<number[]>();
+  const [Goodval, setGoodval] = useState<number[]>();
+  const [Betterval, setBetterval] = useState<number[]>();
+  const [worstval, setworstvalues] = useState<number[]>();
+  const [Avgval, setAvgval] = useState<number[]>();
+  const [Bestval, setBestval] = useState<number[]>();
+
   useEffect(() => {
     const fetchData = async () => {
-      if (!session?.user?.email) return; // Ensure session and email exist
+      if (!session?.user?.email) return;
 
       try {
-        const response = await axios.post("/api/Getuserid", { email: session.user.email });
+        const response = await axios.post(
+          "/api/Getuserid",
+          { email: session.user.email },
+          { headers: { "Cache-Control": "no-store" } } // Ensure the cache option is in the correct place
+        );
         setData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -46,60 +53,77 @@ const Dashboard = () => {
     fetchData();
   }, [session]);
 
-useEffect(()=>{
-  const fetchresult=async()=>{
-    try {
-      const response = await axios.post("/api/Service/Subrecord",{userId:getData?.id});
-      setrecord(response.data)
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }
-  fetchresult()
-},[getData])
+  useEffect(() => {
+    const fetchResult = async () => {
+      if (!getData?.id) return;
 
+      try {
+        const response = await axios.post(
+          "/api/Service/Subrecord",
+          { userId: getData.id },
+          { headers: { "Cache-Control": "no-store" } }
+        );
+        setrecord(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
+    fetchResult();
+  }, [getData]);
 
-const totalPercentage = getrecord?.reduce((total, item) => {
-  return total + parseInt(item.Percentage);
-}, 0) ?? 0;
+  const totalPercentage =
+    getrecord?.reduce((total, item) => {
+      return total + parseInt(item.Percentage);
+    }, 0) ?? 0;
 
-const averagePercentage = totalPercentage / (getrecord?.length || 1); 
+  const averagePercentage = totalPercentage / (getrecord?.length || 1);
 
-const formattedAveragePercentage = averagePercentage.toFixed(2); 
+  const formattedAveragePercentage = averagePercentage.toFixed(2);
 
+  const displayrecord = useCallback((): void => {
+    const Excellentvalues: number[] = [];
+    const Bestvalues: number[] = [];
+    const Bettervalues: number[] = [];
+    const Goodvalues: number[] = [];
+    const Averagevalues: number[] = [];
+    const worstvalues: number[] = [];
+    getrecord?.forEach((item) => {
+     
 
-const displayrecord = useCallback((): void => {
-  const lowValues: number[] = [];
-  const numvalues: number[] = [];
-  const passvalues: number[] = [];
-  const worstvalues: number[] = [];
+      const pars = parseFloat(item.Percentage);
+      if (pars <= 33) {
+        worstvalues.push(pars);
+      }
+      if (pars > 70) {
+        Bettervalues.push(pars);
+      }
+      if (pars > 60) {
+        Goodvalues.push(pars);
+      }
 
-  getrecord?.forEach((item) => {
-    const pars = parseFloat(item.Percentage);
-    if (pars < 33) {
-      lowValues.push(pars);
-    }
-    if (pars > 70) {
-      numvalues.push(pars);
-    }
-    if (pars >= 33) {
-      passvalues.push(pars);
-    }
-    if (pars < 25) {
-      worstvalues.push(pars);
-    }
-  });
-  setpercent(lowValues);
-  setnumber(numvalues);
-  setpassvalues(passvalues);
-  setworstvalues(worstvalues);
-}, [getrecord]);
+      if (pars > 90) {
+        Excellentvalues.push(pars);
+      }
+      if (pars > 80) {
+        Bestvalues.push(pars);
+      }
+      if (pars < 39) {
+        Averagevalues.push(pars);
+      }
+    });
+    setExcellentval(Excellentvalues);
+    setBestval(Bestvalues)
+    setBetterval(Bettervalues)
+    setGoodval(Goodvalues)
+    setAvgval(Averagevalues)
+    setworstvalues(worstvalues)
 
-useEffect(() => {
-  displayrecord();
-},[displayrecord]);
+  }, [getrecord]);
 
+  useEffect(() => {
+    displayrecord();
+  }, [displayrecord]);
 
   return (
     <>
@@ -127,13 +151,14 @@ useEffect(() => {
                         height={50}
                       />
                     </div>
+
                     <div className="flex-1 min-w-0 ms-4">
                       <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                         No of Attempts
                       </p>
                     </div>
                     <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                     {getrecord?.length || 0}
+                      {getrecord?.length || 0}
                     </div>
                   </div>
                 </li>
@@ -148,16 +173,40 @@ useEffect(() => {
                         height={50}
                       />
                     </div>
+
                     <div className="flex-1 min-w-0 ms-4">
                       <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                       Best Attemps
+                        Excellent Attempts
                       </p>
                     </div>
                     <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                    {getnumber?.length}
+                      {Excellentval?.length}
                     </div>
                   </div>
                 </li>
+                <li className="py-3 sm:py-4">
+                  <div className="flex items-center ">
+                    <div className="flex-shrink-0">
+                      <Image
+                        className="w-8 h-8 rounded-full"
+                        src="/images/bestattempt.png"
+                        alt="Bonnie image"
+                        width={50}
+                        height={50}
+                      />
+                    </div>
+
+                    <div className="flex-1 min-w-0 ms-4">
+                      <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                        Best Attempts
+                      </p>
+                    </div>
+                    <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                      {Bestval?.length}
+                    </div>
+                  </div>
+                </li>
+
                 <li className="py-3 sm:py-4">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
@@ -169,13 +218,14 @@ useEffect(() => {
                         height={50}
                       />
                     </div>
+
                     <div className="flex-1 min-w-0 ms-4">
                       <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                        Pass Attempts
+                        Better Attempts
                       </p>
                     </div>
                     <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  {passvaluess?.length}
+                     {Betterval?.length}
                     </div>
                   </div>
                 </li>
@@ -184,22 +234,46 @@ useEffect(() => {
                     <div className="flex-shrink-0">
                       <Image
                         className="w-8 h-8 rounded-full"
-                        src="/images/Fail.png"
-                        alt="Lana image"
+                        src="/images/m.png"
+                        alt="Bonnie image"
                         width={50}
                         height={50}
                       />
                     </div>
+
                     <div className="flex-1 min-w-0 ms-4">
                       <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                        Fail Attempts
+                        Good Attempts
                       </p>
                     </div>
                     <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                    {percent?.length}
+                      {Goodval?.length}
                     </div>
                   </div>
                 </li>
+                <li className="py-3 sm:py-4">
+                  <div className="flex items-center ">
+                    <div className="flex-shrink-0">
+                      <Image
+                        className="w-8 h-8 rounded-full"
+                        src="/images/avg.png"
+                        alt="Bonnie image"
+                        width={50}
+                        height={50}
+                      />
+                    </div>
+
+                    <div className="flex-1 min-w-0 ms-4">
+                      <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                        Average Attempts
+                      </p>
+                    </div>
+                    <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                      {Avgval?.length}
+                    </div>
+                  </div>
+                </li>
+
                 <li className="pt-3 pb-0 sm:pt-4">
                   <div className="flex items-center ">
                     <div className="flex-shrink-0">
@@ -217,7 +291,7 @@ useEffect(() => {
                       </p>
                     </div>
                     <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                    {worstval?.length}
+                      {worstval?.length}
                     </div>
                   </div>
                 </li>
@@ -230,7 +304,7 @@ useEffect(() => {
           </div>
         </div>
 
-        <div className="flex flex-col h-[500px] bg-white border border-gray-200 rounded-lg shadow w-[1175px] justify-center text-center">
+        <div className="flex flex-col h-[670px] bg-white border border-gray-200 rounded-lg shadow w-[1175px] justify-center text-center">
           <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white mt-4">
             Overall Monthly Performence
           </h5>
@@ -238,17 +312,15 @@ useEffect(() => {
             <DynamicLine />
           </div>
         </div>
-
-       
       </div>
 
       <div className="flex flex-row mt-8  ">
         <div className="flex flex-col gap-2 ">
-          <div className="flex flex-col  w-[270px] h-96 ml-[30px] items-center bg-white border border-gray-200 rounded-lg shadow">
+          <div className="flex flex-col  w-[270px] h-[400px] ml-[30px] items-center bg-white border border-gray-200 rounded-lg shadow">
             <div className="mt-5 mb-2">
-            <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white mt-4">
-           Last Test Accuracy
-          </h5>
+              <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white mt-4">
+                Last Test Accuracy
+              </h5>
             </div>
 
             <div className="h-[300px] w-[270px] mt-[10px]">

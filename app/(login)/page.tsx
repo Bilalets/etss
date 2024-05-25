@@ -75,7 +75,7 @@ if(session?.user?.email==='aliets@ets.com'){
           
           toast.success('Logged in success ');
           
-          router.replace('/applicants/dashboard');
+          router.replace('/applicants/home');
         }
       })
       .finally(() => setLoading(false));

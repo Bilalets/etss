@@ -24,9 +24,11 @@ const Line = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post("/api/Getuserid", {
-          email: session?.user?.email,
-        });
+        const response = await axios.post(
+          "/api/Getuserid",
+          { email: session?.user?.email },
+          { headers: { "Cache-Control": "no-store" } }
+        );
         if (response.status === 200) {
           setData(response.data);
         }
@@ -34,6 +36,7 @@ const Line = () => {
         console.error("Error fetching data:", error);
       }
     };
+
     if (session?.user?.email) {
       fetchData();
     }
@@ -42,14 +45,17 @@ const Line = () => {
   useEffect(() => {
     const fetchResult = async () => {
       try {
-        const response = await axios.post("/api/Service/Getyearlyrecord", {
-          userId: getData?.id,
-        });
+        const response = await axios.post(
+          "/api/Service/Getyearlyrecord",
+          { userId: getData?.id },
+          { headers: { "Cache-Control": "no-store" } }
+        );
         setrecord(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
+
     if (getData?.id) {
       fetchResult();
     }
@@ -73,7 +79,7 @@ const Line = () => {
       return total + parseInt(item.Percentage);
     }, 0) ?? 0;
 
-  const averagePercentage = totalPercentage / (getrecord?.length || 1);
+  const averagePercentage = totalPercentage / (getcurrentRecord?.length || 1);
 
   const formattedAveragePercentage = averagePercentage.toFixed(2);
 

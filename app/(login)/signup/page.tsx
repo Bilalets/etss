@@ -17,6 +17,7 @@ import { cities } from './cities';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 interface FormValues {
   name: String;
@@ -279,9 +280,18 @@ const SignUp = () => {
                   Sign up
                 </button>
               )}
+          
+            </div>
+            <div className='flex flex-row gap-5 mt-5'>
+              <p>Already Have an Account?</p>
+              <span className="font-bold text-sm cursor-pointer text-sky-400">
+                <Link href={'/'}>Login</Link>
+              </span>
             </div>
           </div>
+          
         </div>
+       
       </form>
     </>
   );

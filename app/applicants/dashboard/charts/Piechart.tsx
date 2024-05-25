@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import ReactECharts from 'echarts-for-react';
+import ReactECharts from "echarts-for-react";
 
 interface Record {
   Percentage: string;
@@ -21,11 +21,14 @@ const Piechart = () => {
   const [getData, setData] = useState<ID>();
   const [getrecord, setrecord] = useState<Record[]>();
   const [getcurrentRecord, setcurrentRecord] = useState<Record[]>();
+  const [set, seed] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post("/api/Getuserid", { email: session?.user?.email });
+        const response = await axios.post("/api/Getuserid", {
+          email: session?.user?.email,
+        });
         if (response.status === 200) {
           setData(response.data);
         }
@@ -39,7 +42,9 @@ const Piechart = () => {
   useEffect(() => {
     const fetchResult = async () => {
       try {
-        const response = await axios.post("/api/Service/Subrecord", { userId: getData?.id });
+        const response = await axios.post("/api/Service/Subrecord", {
+          userId: getData?.id,
+        });
         setrecord(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -50,17 +55,12 @@ const Piechart = () => {
     }
   }, [getData]);
 
-  const getCurrentDate = (): string => {
-    const now = new Date();
-    return now.toISOString().split('T')[0];
-  };
-
-  const currentDate = getCurrentDate();
-
   useEffect(() => {
     const getcurrent = async () => {
       try {
-        const response = await axios.post("/api/Service/getaccuracy", { userId: getData?.id, createdAt: currentDate });
+        const response = await axios.post("/api/Service/getaccuracy", {
+          userId: getData?.id,
+        });
         setcurrentRecord(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -69,44 +69,42 @@ const Piechart = () => {
     if (getData?.id) {
       getcurrent();
     }
-  }, [currentDate, getData]);
+  }, [getData]);
 
-  const totalPercentage = getcurrentRecord?.reduce((total, item) => {
-    return total + parseInt(item.Percentage);
-  }, 0) ?? 0;
-
-  const averagePercentage = getcurrentRecord?.length ? totalPercentage / getcurrentRecord.length : 0;
-
-
-
+  useEffect(() => {
+    if (getcurrentRecord && getcurrentRecord.length > 0) {
+      const percentage = parseFloat(getcurrentRecord[0].Percentage);
+      seed(percentage);
+    }
+  }, [getcurrentRecord]);
 
   const options = {
     legend: {
-      top: '5%',
-      left: 'center',
+      top: "5%",
+      left: "center",
       height: "50%",
-      color: "green"
+      color: "green",
     },
     toolbox: {
       feature: {},
     },
     series: [
       {
-        name: 'Performance',
-        type: 'pie',
-        radius: ['80%', '60%'],
+        name: "Performance",
+        type: "pie",
+        radius: ["80%", "60%"],
         avoidLabelOverlap: false,
         label: {
           show: true,
-          position: 'center',
-          formatter: '{d}%',
+          position: "center",
+          formatter: "{d}%",
           fontSize: 20,
         },
         emphasis: {
           label: {
             show: true,
             fontSize: 20,
-            fontWeight: 'bold',
+            fontWeight: "bold",
           },
         },
         labelLine: {
@@ -114,12 +112,12 @@ const Piechart = () => {
         },
         data: [
           {
-            value: averagePercentage,  // Use the number here
+            value: 100, // Use the number here
             itemStyle: { borderRadius: [6, 6, 0, 0] },
           },
           {
-            value: 100 - averagePercentage,  // Use the number here
-            itemStyle: { color: 'rgba(180, 180, 180, 0.5)' },
+            value:100-set, // Use the number here
+            itemStyle: { color: "rgba(180, 180, 180, 0.5)" },
             borderRadius: [6, 6, 0, 0],
           },
         ],
@@ -132,6 +130,6 @@ const Piechart = () => {
       <ReactECharts option={options} notMerge={true} lazyUpdate={true} />
     </div>
   );
-}
+};
 
 export default Piechart;

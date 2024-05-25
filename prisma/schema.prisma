@@ -68,6 +68,9 @@ model Category {
   subcategory Subcategory[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+  Desc        String
+  Prep        String
+  Subs        String[]
 }
 
 model Subcategory {

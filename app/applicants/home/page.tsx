@@ -28,6 +28,9 @@ interface Subcategory {
 interface Category {
   id: string;
   name: string;
+  Desc: string;
+  Prep: string;
+  Subs: string[];
   subcategory: Subcategory[];
 }
 
@@ -76,6 +79,7 @@ const Home = () => {
       [categoryId]: subcategory,
     }));
   };
+
   return (
     <>
       <div className="flex flex-row gap-5 justify-center mt-10">
@@ -95,8 +99,8 @@ const Home = () => {
         {serData?.category.map((item) => (
           <div key={item.id} className="flex">
             <div className="mt-10">
-              <div className="h-[450px] w-[350px] bg-white m-auto shadow-md rounded-[1em] overflow-hidden relative group p-2 z-0">
-                <div className="circle absolute h-[5em] w-[5em] -top-[2.5em] -right-[2.5em] rounded-full bg-[#FF5800] group-hover:scale-[1330%] duration-500 z-[-1]"></div>
+              <div className="h-[550px] w-[350px] bg-white m-auto shadow-md rounded-[1em] overflow-hidden relative group p-2 z-0">
+                <div className="circle absolute h-[5em] w-[5em] -top-[2.5em] -right-[2.5em] rounded-full bg-[#FF5800] group-hover:scale-[1530%] duration-500 z-[-1]"></div>
 
                 <button className="text-[0.8em] absolute bottom-[1em] left-[1em] text-[#6C3082] group-hover:text-[white] duration-500"></button>
 
@@ -135,19 +139,22 @@ const Home = () => {
                   <div>
                     <b>Overview</b>
                   </div>
-                      <div>Field Of Expertise: Professor Zoman</div>
+                  <div>Field Of Expertise: {item.Prep}</div>
+                  <b>Subjects:</b>
                   <div>
-                    <p>Biology:34%,Chemistry:27%,Physics:27%</p>
-                    <p>English:9%,Logical Reasoning:3%</p>
+                    {item.Subs.map((item,index) => (
+                      
+                      <div key={index}>{item}</div>
+                    ))}
                   </div>
-              
+
                   <div>
-                    <p>Total Questions: 200</p>
+                    <p>Total Questions: {item.Desc}</p>
                   </div>
                 </div>
 
                 {selectedSubcategories[item.id] && (
-                  <div className="flex mt-10 justify-center">
+                  <div className="flex mt-5 justify-center">
                     <div className="w-60  justify-center items-center text-center">
                       <Slider {...settings}>
                         {selectedSubcategories[item.id]?.subject.map((sub) => (

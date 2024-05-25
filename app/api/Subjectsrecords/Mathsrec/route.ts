@@ -2,40 +2,33 @@ import prisma from "../../../libs/prismadb";
 
 interface subid {
   userId: string;
+  subjectname: string; 
 }
 
 export async function POST(req: Request) {
   const body = await req.json() as subid;
-  const { userId } = body;
+  const { userId, subjectname } = body;
 
   try {
-    const latestRecord = await prisma.saverecord.findMany({
+    const subjectRecords = await prisma.saverecord.findMany({
       where: {
         userId: userId,
+        subjectname: subjectname 
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 1,
       select: {
         Percentage: true,
         Correctawn: true,
         Wrongawn: true,
         subjectname: true,
-        createdAt: true,
+        createdAt: true
       },
     });
 
-    return new Response(JSON.stringify(latestRecord), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    
+    return Response.json(subjectRecords);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
-      return new Response(JSON.stringify({ error: error.message }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      });
     }
   }
 }
