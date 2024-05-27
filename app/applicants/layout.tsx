@@ -6,6 +6,7 @@ import { SessionProvider, useSession } from 'next-auth/react';
 import useSWR from 'swr';
 import { useRouter } from 'next/navigation';
 import AuthContext from '../context/AuthContext';
+import { AppWrapper } from '../context';
 
 
 
@@ -22,7 +23,7 @@ const RootLayout: React.FC<RootLayoutProps> =  ({ children }) => {
 
       <div className="w-full h-full">
         <Navbar />
-        <div>{children}</div>
+        <AppWrapper>{children}</AppWrapper>
       </div>
       
       </AuthContext>

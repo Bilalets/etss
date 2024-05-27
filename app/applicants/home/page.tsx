@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import Link from "next/link";
 import { MyAssessment } from "../assessment/components";
+import { useAppContext } from "@/app/context";
 
 interface Chapter {
   id: string;

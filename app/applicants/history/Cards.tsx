@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import { Card, Table } from "flowbite-react";
 import { SquarePen } from "lucide-react";
+import { useAppContext } from "@/app/context";
 interface record{
   Percentage: string
   Correctawn: string
@@ -12,28 +13,12 @@ interface record{
   createdAt:string
 }
 
-interface ID{
-  id:string
-}
-const Cards = () => {
-  const { data: session, status } = useSession();
-  const [getData,setData]=useState<ID>()
-  const [getrecord,setrecord]=useState<record[]>()
-  const [percent,setpercent]=useState<string>()
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await axios.post("/api/Getuserid",{email:session?.user?.email}, { headers: { "Cache-Control": "no-store" } });
-      if (response.status === 200) {
-        setData(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
 
-  fetchData();
-}, [session]);
+const Cards = () => {
+const {getData}=useAppContext()
+  const [getrecord,setrecord]=useState<record[]>()
+  
+
 const formatDate = (dateString:string) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
