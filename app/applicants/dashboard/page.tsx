@@ -253,7 +253,7 @@ const Dashboard = () => {
             Overall Monthly Performence
           </h5>
           <div>
-            {getrecord && <DynamicLine />}
+             <DynamicLine />
           </div>
         </div>
       </div>
@@ -268,7 +268,7 @@ const Dashboard = () => {
             </div>
 
             <div className="h-[300px] w-[270px] mt-[10px]">
-              {getrecord && <DynamicPiechart />}
+            <DynamicPiechart />
             </div>
           </div>
         </div>
@@ -278,7 +278,7 @@ const Dashboard = () => {
             Subject Performance
           </h5>
           <div>
-            {getrecord && <DynamicBargraph />}
+           <DynamicBargraph />
           </div>
         </div>
 
@@ -287,7 +287,7 @@ const Dashboard = () => {
             Overall Stats in Pie
           </h5>
           <div className="ml-8">
-            {getrecord && <DynamicPie />}
+           <DynamicPie />
           </div>
         </div>
       </div>
